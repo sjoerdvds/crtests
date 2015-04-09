@@ -7,9 +7,9 @@
 #				method specific preparation is executed through a call to method_prepare
 prepare <- function(test,...) UseMethod("prepare")
 
-# 'Prepare the data for the specified test. 
-# 'The default method relevels the holdout set, 
-# so the holdout and train set are completely independent, and to prevent problems with
+#'Prepare the data for the specified test. 
+#'The default method relevels the holdout set, 
+#'so the holdout and train set are completely independent, and to prevent problems with
 # certain algorithms that can't deal with different factor levels across train and holdout set
 prepare.default <- function(test, ...){
   train   <- test$data$train
