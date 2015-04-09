@@ -1,5 +1,5 @@
 # -----------Creating a test------------------------------------------------------------------------------------------
-# Create a test, which can be run using any of the available runtest functions
+# ' Create a test, which can be run using any of the available runtest functions
 # Arguments:
 #       original_data           A data frame
 #       problem                 Either classification or regression. This influences how the algorithms are trained 
