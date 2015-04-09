@@ -1,16 +1,14 @@
 # ----------1. Data Preparation---------------------------------------------------------------------------------------
-#'Prepare the data for the specified test. This allows for different implementations for regression or classification
-# Arguments:
-#  	test	The test for which data is prepared
-# Returns:
-#		data	A list containing prepared train (data$train) and holdout (data$holdout) data frames. Extra 
-#				method specific preparation is executed through a call to method_prepare
+#'Prepare the data for the specified test. 
+#'
+#'This allows for different implementations for regression or classification
+# 
+#'@param 	test	The test for which data is prepared
+#'@return data	A list containing prepared train (\code{data$train}) and holdout (\code{data$holdout}) data frames. Extra method specific preparation is executed through a call to method_prepare
 prepare <- function(test,...) UseMethod("prepare")
 
 #'Prepare the data for the specified test. 
-#'The default method relevels the holdout set, 
-#'so the holdout and train set are completely independent, and to prevent problems with
-# certain algorithms that can't deal with different factor levels across train and holdout set
+#'The default method relevels the holdout set, so the holdout and train set are completely independent, and to prevent problems with certain algorithms that can't deal with different factor levels across train and holdout set
 prepare.default <- function(test, ...){
   train   <- test$data$train
   holdout <- test$data$holdout
