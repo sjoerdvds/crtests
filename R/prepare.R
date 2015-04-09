@@ -8,7 +8,7 @@
 prepare <- function(test,...) UseMethod("prepare")
 
 # 'Prepare the data for the specified test. 
-# The default method relevels the holdout set, 
+# 'The default method relevels the holdout set, 
 # so the holdout and train set are completely independent, and to prevent problems with
 # certain algorithms that can't deal with different factor levels across train and holdout set
 prepare.default <- function(test, ...){
