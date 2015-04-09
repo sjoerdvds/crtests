@@ -1,0 +1,89 @@
+# -----------Creating a test------------------------------------------------------------------------------------------
+# Create a test, which can be run using any of the available runtest functions
+# Arguments:
+#       original_data           A data frame
+#       problem                 Either classification or regression. This influences how the algorithms are trained 
+#                               and what method is used to determine performance
+#       data_transform          A function that transforms the data. 
+#                               It should maintain it in data frame form and maintain the dependent variable.
+#       dependent               The dependent variable: the name of the column containing the prediction goal
+#       train_index             A vector of the rows to be used as training set. All other rows will form the holdout set
+#       preserve_distribution   Should class distribution (if applicable) be as similar as possible for train and test set?
+#       method                  The regression or classification method
+#       test                    The name of the test. Printed in the test results
+#       description             Optional. A more elaborate description of the test
+createtest <- function(original_data, problem = c("classification", "regression"), dependent, data_transform = identity, train_index, method = c("randomForest", "rpart"), name, description="", ...){
+  # The problem should not be missing and be either classification or regression
+  if(missing(problem)){
+    stop("problem is missing with no default")
+  }
+  problem <- match.arg(problem)
+  # The method should not be missing and be one that is implemented
+  if(missing(method)){
+    stop("method is missing with no default")
+  }
+  method <- match.arg(method)
+  
+  # If there is no data, nothing can happen
+  if(missing(original_data)){
+    stop("original_data is missing with no default")
+  }
+  # Without a dependent data, no model could be trained or tested
+  if(missing(dependent)){
+    stop("Dependent variable is missing")
+  }
+  # The dependent variable should refer to a column by name
+  if(!missing(dependent) & typeof(dependent)!="character"){
+    stop(paste("Dependent variable should be a column name (character), not", typeof(dependent)))
+  }
+  # Tests should have a name 
+  if(missing(name)){
+    stop("Test name is missing with no default")
+  }
+  # Transform the data using the provided function. 
+  # If no function is provided, i.e. the default is overwritten with NULL or a non-function,
+  # stop with an error: the provided function cannot be applied to the data.
+  if(!is.null(data_transform) & typeof(data_transform)=="closure"){
+    # For classification, the dependent variable should be a factor
+    if(problem=="classification" & !is.factor(original_data[[dependent]])){
+      original_data[[dependent]] <- factor(original_data[[dependent]])
+      warning("The dependent variable was converted to factor")
+    }
+    #Transform the data
+    transformed <- data_transform(original_data)
+    #Combine the train and test sets in one list. This way, all data is compartmentalized in the final test object. 
+    #Every unused factor is dropped in the train and test sets, so the sets are completely self-contained.
+    #Object properties:
+    #   train       Data for training the model
+    #   holdout     Data held out for testing the model. Otherwise known as test data, but named holdout here to avoid confusion.
+    data <- list(train = droplevels(transformed[train_index,]), holdout = droplevels(transformed[-train_index,]))
+    
+    #Create a structured object of the type specified by the class problem. This makes that the correct runtest method is selected automatically to run the test.
+    #Object properties:
+    #   dependent               The fully specified column name of the dependent variable
+    #	problem					The type of problem for this test (classification or regression)
+    #   data                    The list of train and test data
+    #   name                    The name of this test
+    #   description             A description of the test
+    # 	method					The method that should be used for solving the problem: a single-item list of class method
+    #   extra.args              Extra arguments that should be passed to the runtest method executing this test
+    #   call                    The call to the createtest function
+    #Object class:
+    #   problem. If this matches one of the runtest methods, that method will be executed.
+    test <-  structure(list(dependent = dependent, 
+                            data = data, 
+                            name = name, 
+                            description = description, 
+                            method = structure(method, class=method),
+                            extra.args = c(...),
+                            call = (match.call())
+    ), 
+    class = problem
+    )
+    
+  } else {
+    stop("data_transform is NULL or NA: cannot be applied to the data")
+  }
+  
+  
+}

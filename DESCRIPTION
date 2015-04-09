@@ -1,0 +1,19 @@
+Package: crtests
+Type: Package
+Title: Classification and regression tests
+Version: 0.0.0.9000
+Date: 2015-04-07
+Authors@R: person("Sjoerd", "van der Spoel", , "R@sjoerdvanderspoel.nl", role = c("aut", "cre"))
+Description: Provides wrapper functions for running classification and regression 
+    tests using different machine learning techniques, such as Random Forests 
+    and decision trees. The package provides standardized methods for preparing 
+    data to suit the algorithm's needs, training a model, testing a model, and 
+    evaluating results. Also, some functions are provided to run multiple 
+    instances of a test.
+License: GPL-3
+Imports: 
+  caret,
+  randomForest,
+  rpart
+Suggests: testthat
+LazyData: true
