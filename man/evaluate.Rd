@@ -2,12 +2,9 @@
 % Please edit documentation in R/evaluate.R
 \name{evaluate}
 \alias{evaluate}
-\alias{evaluate_problem}
 \title{Evaluate the performance of a prediction.}
 \usage{
 evaluate(prediction, data, test, ...)
-
-evaluate_problem(test, prediction, observations)
 }
 \arguments{
 \item{prediction}{A vector of predictions for each row in the holdout set}
@@ -15,19 +12,11 @@ evaluate_problem(test, prediction, observations)
 \item{data}{The data list containing train and holdout data sets}
 
 \item{test}{The test object being evaluated}
-
-\item{observations}{The true observations for the dependent value in the holdout set}
-
-\item{test}{The test that was run}
-
-\item{predictions}{A vector of predictions for each row in the holdout set}
 }
 \value{
 A vector of predictions
 }
 \description{
 Wraps the problem-specific evaluation functions by calling \code{\link{evaluate_problem}}. This wrapper is desirable, as it can perform the extraction of the holdout set (observations)
-
-Generic function for evaluation of test results
 }
 

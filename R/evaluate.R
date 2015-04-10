@@ -20,7 +20,6 @@ evaluate <- function(prediction, data, test, ...){
 #'@param		test			    The test that was run
 #'@param		predictions		A vector of predictions for each row in the holdout set
 #'@param		observations	The true observations for the dependent value in the holdout set
-#'@rdname evaluate 
 evaluate_problem <- function(test, prediction, observations) UseMethod("evaluate_problem")
 
 #'@describeIn evaluate_problem Evaluate a classification test's results. Calls \code{\link[caret]{confusionMatrix}}
