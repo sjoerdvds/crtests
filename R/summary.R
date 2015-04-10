@@ -1,9 +1,11 @@
 #------------Summary functions for multitest results------------------------------------------------------------
-# Summary implementation for the results of a multitest of a classification problem
+#' Make a summary of multiple executions of a test
+#' 
+#' Summary implementation for the results of a multitest of a classification problem
 # Arguments:
-#  	results_list			A list of results of the test
+#'@param 	results_list			A list of results of the test
 # Returns:
-#		list of minimum accuracy, maximum accuracy, mean accuracy, standard deviation of accuracy
+#'@return		list of minimum accuracy, maximum accuracy, mean accuracy, standard deviation of accuracy
 # TODO refine...
 summary.multitest_results_classification <- function(results_list){
   accuracies <- sapply(results_list, function(x){

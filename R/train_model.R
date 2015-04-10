@@ -1,13 +1,14 @@
 # ----------2. Model training: wrapper--------------------------------------------------------------------------------
-# Generic function for training a model. 
+#' Train a classification or regression model
+#' 
+#' Generic function for training a model. 
 # Arguments:
-#  	test	The test object. This is passed so the method can be extracted.
-#		data	An object of class "regression" or "classification" with at least x, y, train and holdout
-#				properties
+#'@param  	test	The test object. This is passed so the method can be extracted.
+#'@param		data	An object of class "regression" or "classification" with at least x, y, train and holdout
+#'@param		...   Extra arguments to pass to the classification or regression method
 train_model <- function(test, data,...) UseMethod("train_model")
 
-# Train a model for classification using a classifier algorithm. This function wraps the actual classifier
-# Any extra arguments are passed to the classifier function
+#'@describeIn train_model Train a model for classification using a classifier algorithm. This function wraps the actual classifier
 train_model.classification <- function(test, data,...){
   #Only training data is necessary
   training_data <- data$train
@@ -26,8 +27,7 @@ train_model.classification <- function(test, data,...){
   classification_model(method=test$method, test=test, x=x, y=y, training_data=training_data, ...)
 }
 
-# Train (fit) a regression model. This function wraps a regression algorithm.
-# Any extra arguments are passed to the regression function
+#'@describeIn train_model Train (fit) a regression model. This function wraps a regression algorithm.
 train_model.regression <- function(test, data, ...){
   #Only training data is necessary
   data <- data$train

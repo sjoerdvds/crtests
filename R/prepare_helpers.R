@@ -1,10 +1,12 @@
 # ----------1.a) Data Preparation-utility functions-------------------------------------------------------------------
-# Prepare data for training or testing. This function removes all missing values, including those
-# introduced after (optional) releveling
+#' Prepare data for training or testing. 
+#' 
+#' This function removes all missing values, including those introduced after (optional) releveling
 # Arguments:
-#  	df				The data frame that is to be prepared
-#		df_reference	An optional reference data frame, whose factor levels are to be applied to df
-#		relevel			Logical. Should the df be releveled with df_reference's factor levels?
+#'@param	df The data frame that is to be prepared
+#'@param	df_reference An optional reference data frame, whose factor levels are to be applied to df
+#'@param	relevel			Logical. Should the df be releveled with df_reference's factor levels?
+#'@return A data frame stripped of missing values
 prepare_data <- function(df, df_reference, relevel=TRUE){
   
   if (relevel & missing(df_reference)){
@@ -41,15 +43,16 @@ prepare_data <- function(df, df_reference, relevel=TRUE){
   df_prepared
 }
 
-# Returns a data frame of size ncol(df) * nrow(df)
-# Each column in the result is a factor with the values of df and the levels of df_reference. 
-# This means that if there are levels in df_to_change that are not in df_reference, NAs will be introduced.
-# The main use of this function is in classifier problems, where the training and the test set need to have 
-# equal factors.
-# To work, all names(df_reference) need to be %in% names(df)
+#'Converts the column factor levels in \code{df} to those in \code{df_reference}
+#'
+#' Each column in the result is a factor with the values of df and the levels of df_reference. 
+#' This means that if there are levels in df_to_change that are not in df_reference, NAs will be introduced.
+#' The main use of this function is in classifier problems, where the training and the test set need to have equal factors.
+#' To work, all names(df_reference) need to be %in% names(df)
 # Arguments:
-#		df_reference 	A reference df, which column levels will be applied to df if that column is a factor
-#		df				The df that is to be releveled
+#'@param df_reference	A reference df, which column levels will be applied to df if that column is a factor
+#'@param df	The df that is to be releveled
+#'@return A data.frame where all factor's levels where changed. Through applying new levels, NAs could have been introduced
 apply_levels <- function(df, df_reference){
   #Iff the vector names(df_reference) %in% names(df) consists of only TRUEs, the factor application can be done
   if(all(names(df_reference) %in% names(df))) {
@@ -76,11 +79,13 @@ apply_levels <- function(df, df_reference){
   
 }
 
-# Groups infrequent levels in the data, either a factor or a data.frame
+#' Group infrequent levels in \code{data}, either a factor or a data.frame
+#' 
+#' @param data A data.frame or factor. In the first case, \code{group_levels} is applied to each factor in the data.frame.
+#' @param A factor with at most \code{maximum_levels}, or a data.frame where each factor matches that requirement
 group_levels <- function(data, maximum_levels=32) UseMethod("group_levels")
 
-# Takes a factor, and if that factor has more than 'maximum_levels', it makes a table of level frequencies. The top (maximum_levels-1)
-# are left unchanged, all less frequent levels are grouped into the level "other".
+#' @describeIn group_levels Group infrequent levels in a factor. Takes a factor, and if that factor has more than 'maximum_levels', it makes a table of level frequencies. The top (maximum_levels-1) are left unchanged, all less frequent levels are grouped into the level "other".
 group_levels.factor <- function(factor, maximum_levels=32){
   if(length(levels(factor))> maximum_levels){
     # Make a table of the factor to determine level frequencies
@@ -99,13 +104,13 @@ group_levels.factor <- function(factor, maximum_levels=32){
   factor
 }
 
-# Takes a data.frame, and applies group_levels to each column
+#'@describeIn group_levels  Takes a data.frame, and applies group_levels.factor to each column
 group_levels.data.frame <- function(df, maximum_levels=32){
   # Make sure the result is a data.frame, to maintain the original structure
   data.frame(
     sapply(df, 
            group_levels, 
-           maximum_levels=32,
+           maximum_levels=maximum_levels,
            #Do not simplify, as this turns factors into numeric vectors
            #sapply is still necessary, as it retains the column names
            simplify=FALSE

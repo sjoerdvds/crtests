@@ -1,15 +1,11 @@
-# Run the specified test
+#' Run a classification or regression test
+#' 
 # Arguments:
-#       test    An object of class 'classification' or 'regression'
-#       ...     Extra arguments to runtest
+#'@param       test    An object of class 'classification' or 'regression'
+#'@param       ...     Extra arguments to runtest
 runtest <- function(test, ...) UseMethod("runtest")
 
-# The default test runner. The default test consists of these steps:
-#   prepare			Prepare the data for testing, like removing NAs
-#	train_model		Create a model with the training data
-#	test_model		Make predictions on the holdout data using the created model
-#	evaluate		Evaluate the differences between observations and predictions
-#					from the holdout set
+#'@describeIn runtest The default test run subsequently calls \code{\link{prepare}}, \code{\link{train_model}}, \code{\link{test_model}},  \code{\link{evaluate}}
 runtest.default <- function(test, ...){
   data 		<- prepare(test, ...)
   model 		<- train_model(test, data, ...)

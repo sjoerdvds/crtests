@@ -1,11 +1,16 @@
 #-------Helper methods for creating training samples------------------------------------------------------
-# Make 'folds' samples of the data, so all (rbind(folds)==row.names(data))=TRUE
-# Arguments:
-#  	data					Data to sample
-#		folds					Number of folds to create
-#		dependent				The dependent variable in the data. Used only if preserve_distribution=TRUE
-#		preserve_distribution	Logical, only applicable if the dependent variable is a factor
-# A list of numeric vectors of length 'folds'
+#'Make multiple samples of data
+#'@name multisample
+NULL
+
+#'
+#'\code{cross_fold}: Make 'folds' samples of the data, so \code{all(rbind(folds)==row.names(data))=TRUE}
+#'@param  	data					Data to sample
+#'@param		folds					Number of folds to create
+#'@param		dependent				The dependent variable in the data. Used only if \code{preserve_distribution=TRUE}
+#'@param		preserve_distribution	Logical, only applicable if the dependent variable is a factor
+#'@return   A list of numeric vectors of length 'folds'
+#'@rdname multisample
 multisample.cross_fold <- function(data, folds=10, dependent, preserve_distribution=FALSE){
   data_folds <- list()
   # Folds should just be random
@@ -33,13 +38,16 @@ multisample.cross_fold <- function(data, folds=10, dependent, preserve_distribut
 }
 
 
-# Make 'iterations' random samples of size holdout * nrow(data)
+#' Make random samples of the data
+#' 
+#'\code{random}:  Makes \code{iterations} random samples of size \code{holdout * nrow(data)}
 # Arguments:
-#		data					Data to sample
-#		iterations				Number of iterations to make
-#		holdout					The fraction of data to be used as holdout set
-#		dependent				The dependent variable in the data. Used only if preserve_distribution=TRUE
-#		preserve_distribution	Logical, only applicable if the dependent variable is a factor
+#'@param		data					        Data to sample
+#'@param		iterations				    Number of iterations to make
+#'@param		holdout					      The fraction of data to be used as holdout set
+#'@param		dependent				      The dependent variable in the data. Used only if preserve_distribution=TRUE
+#'@param		preserve_distribution	Logical, only applicable if the dependent variable is a factor
+#'@rdname multisample
 multisample.random <- function(data, holdout=0.2, iterations=10, dependent, preserve_distribution=FALSE){
   lapply(1:iterations, function(x, 
                                 holdout, 

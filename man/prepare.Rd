@@ -2,9 +2,12 @@
 % Please edit documentation in R/prepare.R
 \name{prepare}
 \alias{prepare}
+\alias{prepare.default}
 \title{Prepare the data for the specified test.}
 \usage{
 prepare(test, ...)
+
+\method{prepare}{default}(test, ...)
 }
 \arguments{
 \item{test}{The test for which data is prepared}
@@ -15,4 +18,8 @@ data	A list containing prepared train (\code{data$train}) and holdout (\code{dat
 \description{
 This allows for different implementations for regression or classification
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{default}: The default method relevels the holdout set, so the holdout and train set are completely independent, and to prevent problems with certain algorithms that can't deal with different factor levels across train and holdout set
+}}
 

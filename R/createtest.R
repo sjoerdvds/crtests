@@ -1,17 +1,22 @@
 # -----------Creating a test------------------------------------------------------------------------------------------
-# ' Create a test, which can be run using any of the available runtest functions
+#' Create a classification or regression test case
+#' 
+#' Create a test, which can be run using any of the available runtest functions
+#' 
 # Arguments:
-#       original_data           A data frame
-#       problem                 Either classification or regression. This influences how the algorithms are trained 
-#                               and what method is used to determine performance
-#       data_transform          A function that transforms the data. 
-#                               It should maintain it in data frame form and maintain the dependent variable.
-#       dependent               The dependent variable: the name of the column containing the prediction goal
-#       train_index             A vector of the rows to be used as training set. All other rows will form the holdout set
-#       preserve_distribution   Should class distribution (if applicable) be as similar as possible for train and test set?
-#       method                  The regression or classification method
-#       test                    The name of the test. Printed in the test results
-#       description             Optional. A more elaborate description of the test
+#'@param       original_data           A data frame
+#'@param       problem                 Either classification or regression. This influences how the algorithms are trained 
+#'@param                               and what method is used to determine performance
+#'@param       data_transform          A function that transforms the data. 
+#'@param                               It should maintain it in data frame form and maintain the dependent variable.
+#'@param       dependent               The dependent variable: the name of the column containing the prediction goal
+#'@param       train_index             A vector of the rows to be used as training set. All other rows will form the holdout set
+#'@param       preserve_distribution   Should class distribution (if applicable) be as similar as possible for train and test set?
+#'@param       method                  The regression or classification method
+#'@param       test                    The name of the test. Printed in the test results
+#'@param       description             Optional. A more elaborate description of the test
+#'
+#'@return An object of class 'classification' or 'regression', which holds the data, method, etc. for executing the test case.
 createtest <- function(original_data, problem = c("classification", "regression"), dependent, data_transform = identity, train_index, method = c("randomForest", "rpart"), name, description="", ...){
   # The problem should not be missing and be either classification or regression
   if(missing(problem)){
