@@ -74,17 +74,36 @@ The `train_model` functions trains or fits a model to the data through some form
 
 `train_model.classification` wraps `classification_model`, of which `classification_model.default` calls a machine learning method with parameters `x`, `y` and `data`. `classification_model` exists so method-specific implementations can be made that need other parameters. For example, `rpart` requires a `formula`, so `classification_model.rpart` makes one from the _dependent_ variable of the test object.
 
-`train_model.regression` is the analogue of `train_model.classification` for regression. It calls `regression_model` with parameters `formula` and `data`. Again, methods can have there own implementations.
+`train_model.regression` is the analogue of `train_model.classification` for regression. It calls `regression_model` with parameters `formula` and `data`. Again, methods can have their own implementations.
 
 ###Functions for testing a model
-
+The `test_model` functions serve as a wrapper to `predict`. `test_model.default` calls `predict` with the holdout set as `newdata` and the _model_ produced by `train_model`. If a machine learning methods requires different parameters, the solution is an implementation of `test_model` for that method. For example `predict.rpart` needs a `type` attribute, so `test_model.rpart` was developed.
 
 ###Functions for evaluating test results
+The `evaluate` functions evaluate the performance of a model. `evaluate.default` extracts the dependent variable from the holdout set (the `observations`) and the `predictions` from `test_model` and calls its helper method `evaluate_problem`.
+
+`evaluate_problem.classification` calls `caret::confusionMatrix`. `evaluate_problem.regression` returns a `summary` of `observations - predictions`.
 
 ###Functions for running multiple instances of a test
+As a convenience, the package provides a function to run multiple instances of a test: `multitest`. The parameters to this method are mostly just passed along to `createtest` via `create_and_run_test`. The other parameters govern the sampling method used, as the goal of multiple runs of a test usually is to reduce sample bias. 
+
+There are two options: cross-fold, which makes sure every row of data is used a holdout once; and random, which randomly selects a percentage of the data for training. These are implemented by `multisample.cross_fold` and `multisample.random` respectively.
 
 ##Example: creating and running a test
+```{r}
+library(crtests)
+library(randomForest)
+library(caret)
+data(iris)
+test <- createtest(original_data=iris, 
+                   dependent="Species",
+                   problem="classification",
+                   method="randomForest",
+                   name="An example test",
+                   train_index=sample(1:nrow(iris), 100))
+runtest(test)
 
+```
 
 
 
