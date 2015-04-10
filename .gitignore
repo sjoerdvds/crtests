@@ -2,7 +2,6 @@
 .Rhistory
 .RData
 # History files
-.Rhistory
 .Rapp.history
 # Example code in package build process
 *-Ex.R
@@ -13,3 +12,4 @@ vignettes/*.html
 vignettes/*.pdf
 Read-and-delete-me
 crtests.Rproj
+inst/doc

@@ -1,0 +1,90 @@
+---
+title: "Classification and Regression Tests"
+author: "Sjoerd van der Spoel"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Classification and Regression Tests}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+This package provides functions for preparing data, training models, testing models, and evaluating the outcomes. Its goal is to be an extendable application programming interface (API) to creating and testing predictions made through machine learning. 
+
+The package aims create and run tests for two different machine learning problems: classification and regression. Classification predicts a categorical outcome, whereas regression predicts a continuous outcome. Both problems require different approaches to data preparation, modeling and evaluation. 
+
+##Package functions
+The main package functions fall into one of six categories:
+
+ * A function for creating a test. This sets up the test data, splitting it into training and holdout sets.
+ * Functions for running a test. These call all the functions necessary to execute a test.
+ * Functions for preparing data for a test. This includes problem-specific & method-specific data preparation
+ * Functions for training a model. These are wrapper functions to underlying machine learning functions from other packages
+ * Functions for testing a model. These are wrapper functions to [code] predict, using each machine learning function's own implementation. 
+ * Functions for evaluating test results. These functions compare observations with the predictions produced by testing the model.
+ * Functions for running multiple instances of a test. These functions run a test multiple times on different samples of the data
+
+###Creating and running a test
+The required parameters to creating a test using `createtest` are a dataset, a dependent variable, a problem and a method, a name, and finally an index of the rows to use as training set. 
+
+`createtest` checks that its inputs are not missing and are in the right shape. If possible, it will try to fix issues. For example, classification requires the dependent variable to be a factor, but `createtest` will convert other vector types. Furthermore, `createtest` tries to provide informative messages when it cannot fix an issue.
+
+It returns a list of the class determined by the _problem_ parameter. This class determines, amongst others, which preparation, training, testing and evaluation functions will be called by `runtest`. 
+
+The structure of the return value (the test) is as follows:
+
+dependent
+  : The fully specified column name of the dependent variable.
+
+problem
+  : The type of problem for the test (classification or regression). This is therefore the same as the test class
+
+data 
+  : The list of train and holdout data.frames.
+
+name
+  : The name of the test. This could be used when printing the test results
+
+description
+  : A description of the test.
+
+method
+  : The method that should be used for solving the problem: a single-item list of class method. This is used to determine which functions are to be called for creating a model and making predictions with that model
+
+extra.args
+  : Extra arguments that should be passed to the runtest method executing the test. These are not used in the package, but exist for extendability.
+
+call
+  : The call to the `createtest` function. Again, this could be used when printing the test results, so it is obvious at a glance what the test was about.
+
+###Functions for running a test
+The package provides the `runtest` generic function, which allows execution to be redirected based on the class of the test. Although there are perhaps cases where this distinction is meaningful, the package only provides `runtest.default`.
+
+The default implementation first calls `prepare`. It calls `train_model` with the data from `prepare`. It calls `test_model` with the model from `train_model`. It calls `evaluate` with the predictions from `test_model` and the holdout set from `prepare` and returns the result.
+
+###Functions for preparing data
+The main preparation function is `prepare`. It is a generic function, which allows for different implementations for the different class of problems. However, the package itself only provides `prepare.default`, as it provides generic data preparation that is suitable to both regression and classification.
+
+`prepare.default` calls a helper function `prepare_data`, which removes all missing values and provides informative messages of what happened. Furthermore, this function deals with an issue some algorithms can't deal with: different levels for factors in the train and holdout sets. To deal with this, it calls `apply_levels`. `apply_levels` goes through the data column by column, and replaces the levels of the factors in the holdout sets by those of the same column in the training set.
+
+Finally, `prepare.default` calls `method_prepare`. This generic functions makes it possible to have machine learning method-specific data preparation. These functions are called with the _method_ attribute of the test object. Most methods do not need specific preparation, so `method_prepare.default` simply returns `identity(data)`. Random Forests do need method specific preparation, as they cannot deal with categorical predictors with more than 32 categories. Therefore `method_prepare.randomForest` uses `group_levels` to group infrequent factor levels to make sure no factor has more than 32 levels. 
+
+###Functions for training a model
+The `train_model` functions trains or fits a model to the data through some form of machine learning or statistical technique. There exist two implementations: `train_model.classification` for creating a classification model and `train_model.regression` for fitting a regression model. 
+
+`train_model.classification` wraps `classification_model`, of which `classification_model.default` calls a machine learning method with parameters `x`, `y` and `data`. `classification_model` exists so method-specific implementations can be made that need other parameters. For example, `rpart` requires a `formula`, so `classification_model.rpart` makes one from the _dependent_ variable of the test object.
+
+`train_model.regression` is the analogue of `train_model.classification` for regression. It calls `regression_model` with parameters `formula` and `data`. Again, methods can have there own implementations.
+
+###Functions for testing a model
+
+
+###Functions for evaluating test results
+
+###Functions for running multiple instances of a test
+
+##Example: creating and running a test
+
+
+
+
