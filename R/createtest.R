@@ -35,7 +35,7 @@ createtest <- function(original_data, problem = c("classification", "regression"
   }
   # Without a dependent data, no model could be trained or tested
   if(missing(dependent)){
-    stop("Dependent variable is missing")
+    stop("dependent is missing")
   }
   # The dependent variable should refer to a column by name
   if(!missing(dependent) & typeof(dependent)!="character"){
@@ -85,6 +85,9 @@ createtest <- function(original_data, problem = c("classification", "regression"
     ), 
     class = problem
     )
+    
+    # Return the test object
+    test
     
   } else {
     stop("data_transform is NULL or NA: cannot be applied to the data")
