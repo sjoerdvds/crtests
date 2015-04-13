@@ -22,6 +22,6 @@ classification_model.default <- function(method, test, x, y, training_data, ...)
 #'
 #' RPart requires a formula for classification, which is not provided by the default function
 classification_model.rpart <- function(method, test, x, y, training_data, ...){
-  f <- as.formula(paste(test$dependent, "~."))
+  f <- extract_formula(test)
   rpart(formula=f, data=training_data, method="class")
 }

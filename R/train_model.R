@@ -32,7 +32,7 @@ train_model.regression <- function(test, data, ...){
   #Only training data is necessary
   data <- data$train
   #Formula for model fitting
-  f <- as.formula(paste(test$dependent, "~."))
+  f <- extract_formula(test)
   #Call the generic regression_model function
   regression_model(method, formula=f, data=data)
 }
