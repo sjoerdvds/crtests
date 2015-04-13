@@ -105,10 +105,10 @@ group_levels.factor <- function(factor, maximum_levels=32){
 }
 
 #'@describeIn group_levels  Takes a data.frame, and applies group_levels.factor to each column
-group_levels.data.frame <- function(df, maximum_levels=32){
+group_levels.data.frame <- function(data, maximum_levels=32){
   # Make sure the result is a data.frame, to maintain the original structure
   data.frame(
-    sapply(df, 
+    sapply(data, 
            group_levels, 
            maximum_levels=maximum_levels,
            #Do not simplify, as this turns factors into numeric vectors
@@ -119,11 +119,11 @@ group_levels.data.frame <- function(df, maximum_levels=32){
 }
 
 #'@describeIn group_levels Takes a list of data.frames and applies \code{group_levels.data.frame} to each
-group_levels.list <- function(list, maximum_levels=32){
-  lapply(list,
-         group_levels,
-         maximum_levels = maximum_levels)  
-}
+ group_levels.list <- function(data, maximum_levels=32){
+   lapply(data,
+          group_levels,
+          maximum_levels = maximum_levels)  
+ }
 
 
 # The default group_levels does nothing. This is desirable behavior for any structure that is not a list, data.frame or factor: 
