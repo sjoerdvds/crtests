@@ -4,6 +4,7 @@
 \alias{group_levels}
 \alias{group_levels.data.frame}
 \alias{group_levels.factor}
+\alias{group_levels.list}
 \title{Group infrequent levels in \code{data}, either a factor or a data.frame}
 \usage{
 group_levels(data, maximum_levels = 32)
@@ -11,6 +12,8 @@ group_levels(data, maximum_levels = 32)
 \method{group_levels}{factor}(factor, maximum_levels = 32)
 
 \method{group_levels}{data.frame}(df, maximum_levels = 32)
+
+\method{group_levels}{list}(list, maximum_levels = 32)
 }
 \arguments{
 \item{data}{A data.frame or factor. In the first case, \code{group_levels} is applied to each factor in the data.frame.}
@@ -25,5 +28,7 @@ Group infrequent levels in \code{data}, either a factor or a data.frame
 \item \code{factor}: Group infrequent levels in a factor. Takes a factor, and if that factor has more than 'maximum_levels', it makes a table of level frequencies. The top (maximum_levels-1) are left unchanged, all less frequent levels are grouped into the level "other".
 
 \item \code{data.frame}: Takes a data.frame, and applies group_levels.factor to each column
+
+\item \code{list}: Takes a list of data.frames and applies \code{group_levels.data.frame} to each
 }}
 

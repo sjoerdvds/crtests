@@ -19,6 +19,6 @@ Run a classification or regression test
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: The default test run subsequently calls \code{\link{prepare}}, \code{\link{train_model}}, \code{\link{test_model}},  \code{\link{evaluate}}
+\item \code{default}: The default test run subsequently calls \code{\link{prepare}}, \code{\link{train_model}}, \code{\link{make_predictions}},  \code{\link{evaluate}}
 }}
 

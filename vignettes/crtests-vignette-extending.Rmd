@@ -63,11 +63,11 @@ classification_model.rpart <- function(method, test, x, y, training_data, ...){
 ```
 
 ### Method-specific model testing
-The `test_model` functions is also generic, and get called with a model produced by a machine learning algorithm, providing another hook for method specific implementations. `test_model` is a wrapper to `predict`, so when `predict.'model'` needs specific arguments other than `model` and `newdata`, a new `test_model` can be implemented.
+The `make_predictions` functions is also generic, and get called with a model produced by a machine learning algorithm, providing another hook for method specific implementations. `make_predictions` is a wrapper to `predict`, so when `predict.'model'` needs specific arguments other than `model` and `newdata`, a new `make_predictions` can be implemented.
 
-Again, `rpart` has specific requirements: it needs a `type` parameter, either `class` for classification or `vector` for regression problems. The problem can be extracted from the `test` parameter passed to `test_model`, so the implementation of `test_model.rpart` could look like this:
+Again, `rpart` has specific requirements: it needs a `type` parameter, either `class` for classification or `vector` for regression problems. The problem can be extracted from the `test` parameter passed to `make_predictions`, so the implementation of `make_predictions.rpart` could look like this:
 ```r
-test_model.rpart <- function(model, data, test, ...){
+make_predictions.rpart <- function(model, data, test, ...){
   type <- ""
   if(class(test)=="classification"){
     type <- "class"
@@ -76,7 +76,7 @@ test_model.rpart <- function(model, data, test, ...){
     type <- "vector"
   }
   else {
-    stop(paste("Tests of type", class(test), "are not supported by test_model.rpart"))
+    stop(paste("Tests of type", class(test), "are not supported by make_predictions.rpart"))
   }
   predict(model, newdata=data$holdout, type=type,...)
 }

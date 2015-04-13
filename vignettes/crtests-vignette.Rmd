@@ -60,7 +60,7 @@ call
 ###Functions for running a test
 The package provides the `runtest` generic function, which allows execution to be redirected based on the class of the test. Although there are perhaps cases where this distinction is meaningful, the package only provides `runtest.default`.
 
-The default implementation first calls `prepare`. It calls `train_model` with the data from `prepare`. It calls `test_model` with the model from `train_model`. It calls `evaluate` with the predictions from `test_model` and the holdout set from `prepare` and returns the result.
+The default implementation first calls `prepare`. It calls `train_model` with the data from `prepare`. It calls `make_predictions` with the model from `train_model`. It calls `evaluate` with the predictions from `make_predictions` and the holdout set from `prepare` and returns the result.
 
 ###Functions for preparing data
 The main preparation function is `prepare`. It is a generic function, which allows for different implementations for the different class of problems. However, the package itself only provides `prepare.default`, as it provides generic data preparation that is suitable to both regression and classification.
@@ -77,10 +77,10 @@ The `train_model` functions trains or fits a model to the data through some form
 `train_model.regression` is the analogue of `train_model.classification` for regression. It calls `regression_model` with parameters `formula` and `data`. Again, methods can have their own implementations.
 
 ###Functions for testing a model
-The `test_model` functions serve as a wrapper to `predict`. `test_model.default` calls `predict` with the holdout set as `newdata` and the _model_ produced by `train_model`. If a machine learning methods requires different parameters, the solution is an implementation of `test_model` for that method. For example `predict.rpart` needs a `type` attribute, so `test_model.rpart` was developed.
+The `make_predictions` functions serve as a wrapper to `predict`. `make_predictions.default` calls `predict` with the holdout set as `newdata` and the _model_ produced by `train_model`. If a machine learning methods requires different parameters, the solution is an implementation of `make_predictions` for that method. For example `predict.rpart` needs a `type` attribute, so `make_predictions.rpart` was developed.
 
 ###Functions for evaluating test results
-The `evaluate` functions evaluate the performance of a model. `evaluate.default` extracts the dependent variable from the holdout set (the `observations`) and the `predictions` from `test_model` and calls its helper method `evaluate_problem`.
+The `evaluate` functions evaluate the performance of a model. `evaluate.default` extracts the dependent variable from the holdout set (the `observations`) and the `predictions` from `make_predictions` and calls its helper method `evaluate_problem`.
 
 `evaluate_problem.classification` calls `caret::confusionMatrix`. `evaluate_problem.regression` returns a `summary` of `observations - predictions`.
 
