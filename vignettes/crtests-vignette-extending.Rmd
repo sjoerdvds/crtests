@@ -1,0 +1,83 @@
+---
+title: "Extending crtests for other algorithms"
+author: "Sjoerd van der Spoel"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Extending crtests for other algorithms}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+`crtests` intends to be an application programming interface (API) for machine learning in R. Its goal is to be a flexible and fast framework for running a regression or classification test on a data set. To achieve this, the package acts as a wrapper to algorithms like Random Forests, decision trees or support vector machines, making sure that data is in the right format for these algorithms.
+
+Some algorithms have special requirements, such as a maximum number of predictors, a maximum number of categories for categorical predictors, or an inability to deal with certain column types. `crtests` standard implementation deals with some of these requirements, but gives room to deal with algorithm-specific requirements. This vignette describes how these can be implemented, by giving an example implementation for both Breiman's Random Forests and for `rpart` decision trees.
+
+## Default preparation steps for classification and regression
+To know what to implement for a specific algorithm, it is necessary to know what is already implemented. The standard data preparation through the `prepare` function does the following:
+
+ * For each factor in the holdout set, it applies the levels of the corresponding factor in the training set. If this introduces NAs, these are removed.
+ * Remove missing rows in the data through `na.omit`
+ 
+
+## Extending crtests for Random Forests & rpart
+### Random Forest requirements
+R's implementation of Random Forests through the `randomForest` packages has a few specific requirements. It can for example not deal with levels in the dependent variable of the holdout set that were not in the training set, nor can it deal with NAs. These have been handled by the default `prepare` and its helper method `prepare_data`.  `randomForest` can also not deal with categorical predictors with more than 32 categories. This needs to be addressedthrough an implementation of `method_prepare`.
+
+### Method-specific data preparation
+`method_prepare` is an S3-generic that gets called with a method: a character of class _method_, which would be 'randomForest' in this case. The function executed depends on the method, so a function `method_prepare.randomForest` needs to be written.
+
+This function should reduce the number of levels of each factor to at most 32. One way is to drop all levels that are not among the 32 most frequent. This could lead to significant loss of data (through the introduction of NAs). The other option is to group the infrequent levels (those not in the top 31) into one level called 'other'. This would not lead to data loss through NAs, so it is perhaps preferable.
+
+`crtests` provides a function that handles this grouping: `group_levels`. This is also a generic, and can be called with a data.frame or a factors. This function does just what was stated before: any levels outside the `maximum-1` most frequent are grouped into one level called `other`.
+
+So, the implementation of `method_prepare.randomForest` could look something like this:
+```r
+method_prepare.randomForest <- function(method, test, data, ...){
+  # Use group_levels to reduce number of factor levels to at most 32
+  group_levels(data = data, maximum_levels = 32)
+```
+Now, this satisfies the core requirement for an implementation of `method_prepare`: it returns a list of data containing a training and holdout set. But now, there might be levels in the holdout set that are not in the training set. So, `prepare_data` needs to be called again to relevel the holdout factors and remove NAs. So, the complete implementation looks like this:
+
+```r
+method_prepare.randomForest <- function(method, test, data, ...){
+  # Use group_levels to reduce number of factor levels to at most 32
+  data <- group_levels(data = data, maximum_levels = 32)
+
+  # Make sure the factor levels in holdout are also in the training set, and remove NAs this introduces.
+  data$holdout <- prepare_data(data$holdout, data$train)
+  
+  data
+```
+
+### Method-specific model training
+After data preparation, `crtests` also provides a 'hook' to deal with method specific requirements for model training. The `classification_model.default` function calls the machine learning method with an `x`, `y` and the training data. This is not always sufficient, like for the decision tree package `rpart`: this also requires a formula argument.
+
+Implementing this is simple by creating a `classification_model.rpart` function and accessing the `test` parameter that is passed to that function:
+```r
+classification_model.rpart <- function(method, test, x, y, training_data, ...){
+  # extract_formula creates a formula of the form 'dependent ~ .', which is an attribute of the test object
+  f <- extract_formula(test)
+  rpart(formula=f, data=training_data, method="class")
+}
+```
+
+### Method-specific model testing
+The `test_model` functions is also generic, and get called with a model produced by a machine learning algorithm, providing another hook for method specific implementations. `test_model` is a wrapper to `predict`, so when `predict.'model'` needs specific arguments other than `model` and `newdata`, a new `test_model` can be implemented.
+
+Again, `rpart` has specific requirements: it needs a `type` parameter, either `class` for classification or `vector` for regression problems. The problem can be extracted from the `test` parameter passed to `test_model`, so the implementation of `test_model.rpart` could look like this:
+```r
+test_model.rpart <- function(model, data, test, ...){
+  type <- ""
+  if(class(test)=="classification"){
+    type <- "class"
+  }
+  else if (class(test)=="regression"){
+    type <- "vector"
+  }
+  else {
+    stop(paste("Tests of type", class(test), "are not supported by test_model.rpart"))
+  }
+  predict(model, newdata=data$holdout, type=type,...)
+}
+```
