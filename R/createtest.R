@@ -17,17 +17,17 @@
 #'@param       description             Optional. A more elaborate description of the test
 #'
 #'@return An object of class 'classification' or 'regression', which holds the data, method, etc. for executing the test case.
-createtest <- function(original_data, problem = c("classification", "regression"), dependent, data_transform = identity, train_index, method = c("randomForest", "rpart"), name, description="", ...){
+createtest <- function(original_data, problem = c("classification", "regression"), dependent, data_transform = identity, train_index, method, name, description="", ...){
   # The problem should not be missing and be either classification or regression
   if(missing(problem)){
     stop("problem is missing with no default")
   }
   problem <- match.arg(problem)
-  # The method should not be missing and be one that is implemented
+  # The method should not be missing 
   if(missing(method)){
     stop("method is missing with no default")
   }
-  method <- match.arg(method)
+  
   
   # If there is no data, nothing can happen
   if(missing(original_data)){
