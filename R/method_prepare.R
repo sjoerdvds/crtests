@@ -18,10 +18,12 @@ method_prepare.default <- function(method, test, data, ...){
 
 #'@describeIn method_prepare Random Forest specific data preparation. Calls \code{\link{group_levels}} on \code{data}, then relevels the holdout set so it has no levels not found in the training set (using \code{\link{prepare_data}})
 method_prepare.randomForest <- function(method, test, data, ...){
-  data <- group_levels(data = data, maximum_levels = 32)
+  data <- group_levels(data = data, 
+                       maximum_levels = 32)
   
   #Levels in the data may have changed, so relevel the holdout set
-  data$holdout <- prepare_data(data$holdout, data$train)
+  data$holdout <- prepare_data(data$holdout, 
+                               data$train)
   
   data
 }

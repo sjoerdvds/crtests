@@ -91,7 +91,7 @@ group_levels.factor <- function(factor, maximum_levels=32){
     # Make a table of the factor to determine level frequencies
     frequencies 	<- table(factor)
     # Order the frequencies from high to low
-    frequencies		<- frequencies[order(frequencies, desc=TRUE)]	
+    frequencies		<- frequencies[order(frequencies, decreasing=TRUE)]	
     # Take the top (maximum_levels-1) levels. These will be left unchanged. 
     # If there is a number of levels with equal frequencies, an arbitrary
     # subset of those levels is taken.
@@ -118,8 +118,17 @@ group_levels.data.frame <- function(df, maximum_levels=32){
   )
 }
 
-# The default group_levels does nothing. This is desirable behavior for any structure that is not a data.frame or factor: 
+#'@describeIn group_levels Takes a list of data.frames and applies \code{group_levels.data.frame} to each
+group_levels.list <- function(list, maximum_levels=32){
+  lapply(list,
+         group_levels,
+         maximum_levels = maximum_levels)  
+}
+
+
+# The default group_levels does nothing. This is desirable behavior for any structure that is not a list, data.frame or factor: 
 # there is no meaningful way apply group_levels to this type of structure.
 group_levels.default <- function(data, maximum_levels=32){
   identity(data)
 }
+
