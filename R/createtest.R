@@ -56,6 +56,12 @@ createtest <- function(original_data, problem = c("classification", "regression"
     }
     #Transform the data
     transformed <- data_transform(original_data)
+    
+    #Check if the train_index is smaller than the number of rows in the transformed. Otherwise, 
+    #the holdout set would be empty
+    if(length(train_index)>=nrow(original_data)){
+      stop("length(train_index) must be smaller than number of rows in the data")
+    }
     #Combine the train and test sets in one list. This way, all data is compartmentalized in the final test object. 
     #Every unused factor is dropped in the train and test sets, so the sets are completely self-contained.
     #Object properties:
