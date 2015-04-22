@@ -15,7 +15,9 @@ Imports:
   caret,
   randomForest,
   rpart
-Suggests: testthat,
-    knitr
+Suggests: 
+  testthat,
+  knitr,
+  e1071
 LazyData: true
 VignetteBuilder: knitr
