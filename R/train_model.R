@@ -30,9 +30,9 @@ train_model.classification <- function(test, data,...){
 #'@describeIn train_model Train (fit) a regression model. This function wraps a regression algorithm.
 train_model.regression <- function(test, data, ...){
   #Only training data is necessary
-  data <- data$train
+  training_data <- data$train
   #Formula for model fitting
   f <- extract_formula(test)
   #Call the generic regression_model function
-  regression_model(method, formula=f, data=data)
+  regression_model(method = test$method, formula = f, training_data = training_data)
 }

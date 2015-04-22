@@ -8,7 +8,7 @@
 #'@param		test	The test being conducted
 make_predictions <- function(model, data, test, ...) UseMethod("make_predictions")
 
-#'@describeIn make_predictions This function is a simple wrapper to \code{\link[base]{predict}}, which it with the trained model and holdout data. Model classes that require extra arguments to predict can do so through a separate implementations or, less desirably, through the extra arguments.
+#'@describeIn make_predictions This function is a simple wrapper to \code{\link[stats]{predict}}, which it with the trained model and holdout data. Model classes that require extra arguments to predict can do so through a separate implementations or, less desirably, through the extra arguments.
 make_predictions.default <- function(model, data, test, ...){
   predict(model, newdata=data$holdout, ...)
 }
@@ -26,5 +26,5 @@ make_predictions.rpart <- function(model, data, test, ...){
   else {
     stop(paste("Tests of type", class(test), "are not supported by make_predictions.rpart"))
   }
-  predict(model, newdata=data$holdout, type=type,...)
+  rpart::predict(model, newdata=data$holdout, type=type,...)
 }

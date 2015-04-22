@@ -33,9 +33,13 @@ createtest <- function(original_data, problem = c("classification", "regression"
   if(missing(original_data)){
     stop("original_data is missing with no default")
   }
-  # Without a dependent data, no model could be trained or tested
+  # Without a dependent variable, no model could be trained or tested
   if(missing(dependent)){
-    stop("dependent is missing")
+    stop("dependent is missing with no default")
+  }
+  # Without an train index, data cannot be split 
+  if(missing(train_index)){
+    stop("train_index is missing with no default")
   }
   # The dependent variable should refer to a column by name
   if(!missing(dependent) & typeof(dependent)!="character"){
@@ -49,18 +53,24 @@ createtest <- function(original_data, problem = c("classification", "regression"
   # If no function is provided, i.e. the default is overwritten with NULL or a non-function,
   # stop with an error: the provided function cannot be applied to the data.
   if(!is.null(data_transform) & typeof(data_transform)=="closure"){
+    #Transform the data
+    transformed <- data_transform(original_data)
+    
     # For classification, the dependent variable should be a factor
     if(problem=="classification" & !is.factor(original_data[[dependent]])){
       original_data[[dependent]] <- factor(original_data[[dependent]])
       warning("The dependent variable was converted to factor")
     }
-    #Transform the data
-    transformed <- data_transform(original_data)
+
     
     #Check if the train_index is smaller than the number of rows in the transformed. Otherwise, 
     #the holdout set would be empty
     if(length(train_index)>=nrow(original_data)){
       stop("length(train_index) must be smaller than number of rows in the data")
+    }
+    #There would be no training data if the train_index is of length zero
+    if(length(train_index)==0){
+      stop("train_index is of length 0")
     }
     #Combine the train and test sets in one list. This way, all data is compartmentalized in the final test object. 
     #Every unused factor is dropped in the train and test sets, so the sets are completely self-contained.
@@ -96,7 +106,7 @@ createtest <- function(original_data, problem = c("classification", "regression"
     test
     
   } else {
-    stop("data_transform is NULL or NA: cannot be applied to the data")
+    stop("data_transform is NULL or not a function: cannot be applied to the data")
   }
   
   

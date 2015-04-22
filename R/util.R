@@ -11,7 +11,7 @@ NULL
 #' @param testthat Test function to run on every iteration
 #' @param outcomes List of length \code{args} with expected outcomes for each test. Names should match those of \code{args}
 #' @rdname util
-missing_argument_test <- function(fun, args, testthat=expect_error, outcomes){
+missing_argument_test <- function(fun, args, testthat=testthat::expect_error, outcomes){
   # Only works if the names in outcomes are the same as those in args
   if(all(names(outcomes)%in%names(args))){
     # Go through the arguments by name
@@ -73,4 +73,23 @@ random_string <- function(length){
   } else {
     ""
   }
+}
+
+#' Determine the length of the factors in a data.frame
+#' 
+#' Goes through every column in the data.frame, and return the length of its levels
+#' @param df A data.frame
+#' @return A vector of length \code{n}, with \code{n} the number of factor columns in the data frame, containing the length of the levels of those factors
+factor_length <- function(df){
+  # Unlist so the result is a vector, not a list, and so the NULL values are removed
+  unlist(
+    lapply(df,
+           # Check for each column if it is a factor, 
+           # and if so: return the length of the levels in that factor
+           function(col){
+             if(is.factor(col)){
+               length(levels(col))
+             } 
+           })
+  )
 }

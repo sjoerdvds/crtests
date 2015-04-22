@@ -7,8 +7,8 @@
 # Returns:
 #'@return		list of minimum accuracy, maximum accuracy, mean accuracy, standard deviation of accuracy
 # TODO refine...
-summary.multitest_results_classification <- function(results_list){
-  accuracies <- sapply(results_list, function(x){
+summary.multitest_results_classification <- function(object,...){
+  accuracies <- sapply(object, function(x){
     x$overall["Accuracy"]
   })
   c(Minimum=min(accuracies), Mean=mean(accuracies), SD=mean(accuracies), Maximum=max(accuracies))

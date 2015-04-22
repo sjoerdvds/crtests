@@ -86,10 +86,10 @@ apply_levels <- function(df, df_reference){
 group_levels <- function(data, maximum_levels=32) UseMethod("group_levels")
 
 #' @describeIn group_levels Group infrequent levels in a factor. Takes a factor, and if that factor has more than 'maximum_levels', it makes a table of level frequencies. The top (maximum_levels-1) are left unchanged, all less frequent levels are grouped into the level "other".
-group_levels.factor <- function(factor, maximum_levels=32){
-  if(length(levels(factor))> maximum_levels){
+group_levels.factor <- function(data, maximum_levels=32){
+  if(length(levels(data))> maximum_levels){
     # Make a table of the factor to determine level frequencies
-    frequencies 	<- table(factor)
+    frequencies 	<- table(data)
     # Order the frequencies from high to low
     frequencies		<- frequencies[order(frequencies, decreasing=TRUE)]	
     # Take the top (maximum_levels-1) levels. These will be left unchanged. 
@@ -99,9 +99,9 @@ group_levels.factor <- function(factor, maximum_levels=32){
     # The levels with lower frequencies will be grouped as "other"
     levels_to_group	<- names(frequencies[-which(names(frequencies) %in% top_levels)])
     # The actual regrouping
-    levels(factor)[levels(factor) %in% levels_to_group] <- "Other"
+    levels(data)[levels(data) %in% levels_to_group] <- "Other"
   } 
-  factor
+  data
 }
 
 #'@describeIn group_levels  Takes a data.frame, and applies group_levels.factor to each column

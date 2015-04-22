@@ -16,6 +16,10 @@ prepare.default <- function(test, ...){
   # As releveling should not cause problems for other algorithms, this is done by default.
   holdout_prepared <- prepare_data(holdout, train)
   train_prepared <- prepare_data(train, relevel=FALSE)
+  # Replace the test data by the partially prepared data 
+  test$data <- list(train=train_prepared, 
+                    holdout=holdout_prepared)
+  method_prepare(method = test$method, 
+                 test = test)
   
-  method_prepare(method=test$method, test=test, data=list(train=train_prepared, holdout=holdout_prepared))
 }

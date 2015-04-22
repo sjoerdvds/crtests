@@ -24,10 +24,23 @@ evaluate_problem <- function(test, prediction, observations) UseMethod("evaluate
 
 #'@describeIn evaluate_problem Evaluate a classification test's results. Calls \code{\link[caret]{confusionMatrix}}
 evaluate_problem.classification <- function(test, prediction, observations){
-  confusionMatrix(prediction, observations)
+  caret::confusionMatrix(prediction, observations)
 }
 
 #'@describeIn evaluate_problem Evaluate a regression test's results
 evaluate_problem.regression <- function(test, prediction, observations){
+  difference <- (prediction-observations)
+  # Calculate the mean error
+  me <- mean(difference)
+  # Calculate the mean absolute error
+  mae <- mean(abs(difference))
+  # Calculate the mean squared error
+  mse <- mean(difference^2)
+  # Calculate the mean absolute percentage error
+  mape <- mean(abs(difference)/observations)
+  # Calculate the root mean absolute error
+  rmse <- sqrt(mse)
+  
   summary(prediction - observations)
 }
+
