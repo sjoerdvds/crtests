@@ -28,18 +28,17 @@ evaluate_problem.classification <- function(test, prediction, observations){
   evaluation_matrix <- caret::confusionMatrix(prediction, observations)
   # Make a list of the overall statistics, so its attributes can be extracted with $
   overall <- as.list(evaluation_matrix$overall)
-  structure(class="evaluation",
-            list(
-              measures = list("Accuracy" = overall$Accuracy,
+  evaluation( measures = list("Accuracy" = overall$Accuracy,
                               "95% CI"   = c(overall$AccuracyLower, 
                                              overall$AccuracyUpper),
                               "No information rate" = overall$AccuracyNull,
                               "P-value (accuracy > NIR)" = overall$AccuracyPValue,
                               "McNemar's test P-value" = overall$McnemarPValue
                               )
-              ),
-            test = test
+              ,
+              test = test
             )
+  
 }
 
 #'@describeIn evaluate_problem Evaluate a regression test's results
@@ -56,8 +55,7 @@ evaluate_problem.regression <- function(test, prediction, observations){
   # Calculate the root mean absolute error
   rmse <- sqrt(mse)
   # Put it all together in an object of class "regression_evaluation", so it can be printed by the appropriate function
-  structure(class="evaluation",
-            list(
+  evaluation(
               measures = list("Mean error" = me,
                               "Mean absolute error" = mae,
                               "Mean square error" = mse,
@@ -65,6 +63,6 @@ evaluate_problem.regression <- function(test, prediction, observations){
                               "Root mean square error" = rmse),
               test = test
             )
-  )
+  
 }
 

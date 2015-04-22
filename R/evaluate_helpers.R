@@ -1,13 +1,43 @@
+#' Create an evaluation object
+#' 
+#' Creates an evaluation object from the test and measures. Reads out the attributes of the test
+#' @param test Object of class 'regression' or 'classification'
+#' @param measures List of test measures and their values
+#' @return Object of class 'evaluation', with attributes: 'test_attributes', 'measures' and 'test'
+evaluation <- function(test, measures){
+  method <- class(test$method)
+  dependent <- test$dependent
+  held_out_rows <- nrow(test$data$holdout)
+  total_rows <- held_out_rows + nrow(test$data$train)
+  
+  # Convert the data transformation function to string
+  data_transformation <- test$data_transform
+  # If the transform function was 'identity' (the default), convert it to "None"
+  data_transformation <- ifelse(data_transformation=="identity", "None", data_transformation)
+  
+  test_attributes <- list("Method" = method, 
+                       "Dependent variable" = dependent,
+                       "Rows held out" = held_out_rows,
+                       "Total rows in data" = total_rows,
+                       "Data transformation" = data_transformation)
+  structure(class="evaluation",
+            list(measures = measures,
+                 test_attributes = test_attributes,
+                 test = test))
+}
+
 #' Print an 'evaluation' object
 #' 
 #' Pretty prints an object of class 'evaluation'
 #' @param x Object to print
 #' @param ... Further arguments to print.evaluation
 #' @details Prints the object to look like a table
-print.evaluation <- function(x, digits = max(3, getOption("digits")-3), ...){
+print.evaluation <- function(x, digits = max(3, getOption("digits")-4), ...){
   test <- x$test
+  measures <- x$measures
+  test_attributes <- x$test_attributes
   # Results should look a little something like:
-  # Regression Test: A regression test
+  # Regression Test Evaluation: A regression test
   #
   # Test attributes:
   #
@@ -32,44 +62,60 @@ print.evaluation <- function(x, digits = max(3, getOption("digits")-3), ...){
                                        1)),
                              substring(test_class,
                                        2),
-                             " Test: ",
+                             " Test Evaluation: ",
                              test$name)
   # Top line
   cat(paste0(test_class_label, "\n\n"))
   # Lines after that
   cat("Test attributes:\n")
-  # Make the test attributes pretty
-  test_attribute_names <- paste(c("Method",
-                                  "Dependent variable",
-                                  "Percentage held out",
-                                  "Total rows in data",
-                                  "Data transformation"),
-                                ":")
-  test_attribute_names <-  format(test_attribute_names, justify="right")
-  method <- class(test$method)
-  dependent <- test$dependent
-  held_out_rows <- nrow(test$data$holdout)
-  total_rows <- held_out_rows + nrow(test$data$train)
-  held_out_percentage <- paste((held_out_rows / total_rows) * 100,
-                               "%")
-  held_out <- paste(held_out_percentage, 
-                    paste("(", held_out_rows,
-                          "rows)")) 
-  # Convert the data transformation function to string
-  data_transformation <- test$data_transform
-  # If the transform function was 'identity' (the default), convert it to "None"
-  data_transformation <- ifelse(data_transform=="identity", "None", data_transformation)
   
-  test_attribute_values <<- c(method, 
-                             dependent,
-                             held_out,
-                             total_rows,
-                             data_transformation)
-  test_attributes <- cbind(test_attribute_names,
-                           test_attribute_values)
+  # ----Make the test attributes pretty-------------------------
+  # Convert held_out_rows to a percentage
+  held_out_percentage <- paste0(format(test_attributes$"Rows held out" / test_attributes$"Total rows in data" * 100,
+                                       digits),
+                                "%")
+  held_out <- paste(held_out_percentage, 
+                    paste0("(", test_attributes$"Rows held out",
+                           " rows)")) 
+  # Insert the held out percentage string into the attributes
+  test_attributes <- c(test_attributes[1:2], "Percentage held out" = held_out, test_attributes[4:5])
+  test_attribute_names <- paste(c(names(test_attributes), 
+                                names(measures)),
+                                ":")
+
+  test_attribute_names <-  format(test_attribute_names, justify="right")
+  # Remove the 5 last test_attribute names: these where just included to make sure the width of format is correct
+  test_attribute_names <- test_attribute_names[1:5]
+
+
+  test_attribute_matrix <- cbind(test_attribute_names,
+                                 format(test_attributes,
+                                    digits))
   # Remove row and column names and print the test attributes
-  print(remove_names(test_attributes), 
+  print(remove_names(test_attribute_matrix), 
         quote=FALSE)
   
+  # ----Make the test measures pretty---------------------------
+  cat("\nPerformance measures & statistics:\n")
+  measure_names <- paste(names(measures), 
+                         ":")
+  measure_names_labels <- format(measure_names, 
+                                 justify="right")
+  measure_matrix <- cbind(measure_names_labels,
+                          format(measures, 
+                                 digits, justify="right")
+                    )
+  print(remove_names(measure_matrix),
+        quote = FALSE)
+  
   invisible(x)
+}
+
+#' Summary of an evaluation
+#' 
+#' Produces a summary of an evaluation, consisting of the test attributes and the performance measures
+#' @param object Evaluation object to make summary of
+#' @param include_attributes Logical. Should all attributes of the test be included in the output? 
+summary.evaluation <- function(object, include_attributes=TRUE){
+  
 }
