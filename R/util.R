@@ -93,3 +93,22 @@ factor_length <- function(df){
            })
   )
 }
+
+#' Set any names of x to ""
+#' 
+#' @param x An object that has a 'names' property, typically a matrix, list or data.frame
+remove_names <- function(x) UseMethod("remove_names")
+
+#' Set all row and column names of a matrix to ""
+#' 
+#' Set row and column names to "" for pretty printing
+#' @param matrix Matrix to 'remove' colnames and rownames from
+#' @return Matrix where colnames and rownames consist of only ""
+#' @describeIn remove_names
+remove_names.matrix <- function(x){
+  rownames(x) <- rep("", 
+                          nrow(x))
+  colnames(x) <- rep("", 
+                          ncol(x))
+  x
+}
