@@ -5,7 +5,7 @@
 \title{Create a classification or regression test case}
 \usage{
 createtest(original_data, problem = c("classification", "regression"),
-  dependent, data_transform = identity, train_index, method, name,
+  dependent, data_transform = quote(identity), train_index, method, name,
   description = "", ...)
 }
 \arguments{
@@ -15,7 +15,7 @@ createtest(original_data, problem = c("classification", "regression"),
 
 \item{dependent}{The dependent variable: the name of the column containing the prediction goal}
 
-\item{data_transform}{A function that transforms the data.}
+\item{data_transform}{A quoted function name that transforms the data.}
 
 \item{train_index}{A vector of the rows to be used as training set. All other rows will form the holdout set}
 

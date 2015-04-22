@@ -6,7 +6,7 @@
 \usage{
 create_and_run_test(train_index, data, dependent,
   problem = c("classification", "regression"), method = c("randomForest",
-  "rpart"), name, description, data_transform = identity)
+  "rpart"), name, description, data_transform = quote(identity))
 }
 \arguments{
 \item{train_index}{A vector of the rows to be used as training set. All other rows will form the holdout set}
@@ -19,7 +19,7 @@ create_and_run_test(train_index, data, dependent,
 
 \item{description}{Optional. A more elaborate description of the test}
 
-\item{data_transform}{A function that transforms the data.}
+\item{data_transform}{A quoted function name that transforms the data.}
 }
 \description{
 A convenience function calling \code{\link{createtest}} first, then runs the test using \code{\link{runtest}}.

@@ -6,7 +6,7 @@
 \usage{
 multitest(data, dependent, problem = c("classification", "regression"),
   method = c("randomForest", "rpart"), name, description = "",
-  data_transform = identity, iterations = 10, holdout = 0.2,
+  data_transform = quote(identity), iterations = 10, holdout = 0.2,
   cross_validation = FALSE, preserve_distribution = FALSE)
 }
 \arguments{
@@ -18,7 +18,7 @@ multitest(data, dependent, problem = c("classification", "regression"),
 
 \item{description}{Optional. A more elaborate description of the test}
 
-\item{data_transform}{A function that transforms the data.}
+\item{data_transform}{A quoted function name that transforms the data.}
 
 \item{iterations}{The number of times the test is to be performed. If cross-validation is used, this is the number of folds}
 

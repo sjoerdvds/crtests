@@ -7,7 +7,7 @@
 #'@param       original_data           A data frame
 #'@param       problem                 Either classification or regression. This influences how the algorithms are trained 
 #'@param                               and what method is used to determine performance
-#'@param       data_transform          A function that transforms the data. 
+#'@param       data_transform          A quoted function name that transforms the data. 
 #'@param                               It should maintain it in data frame form and maintain the dependent variable.
 #'@param       dependent               The dependent variable: the name of the column containing the prediction goal
 #'@param       train_index             A vector of the rows to be used as training set. All other rows will form the holdout set
@@ -17,7 +17,7 @@
 #'@param       description             Optional. A more elaborate description of the test
 #'
 #'@return An object of class 'classification' or 'regression', which holds the data, method, etc. for executing the test case.
-createtest <- function(original_data, problem = c("classification", "regression"), dependent, data_transform = identity, train_index, method, name, description="", ...){
+createtest <- function(original_data, problem = c("classification", "regression"), dependent, data_transform = quote(identity), train_index, method, name, description="", ...){
   # The problem should not be missing and be either classification or regression
   if(missing(problem)){
     stop("problem is missing with no default")
@@ -52,9 +52,10 @@ createtest <- function(original_data, problem = c("classification", "regression"
   # Transform the data using the provided function. 
   # If no function is provided, i.e. the default is overwritten with NULL or a non-function,
   # stop with an error: the provided function cannot be applied to the data.
-  if(!is.null(data_transform) & typeof(data_transform)=="closure"){
+  if(!is.null(data_transform) & typeof(data_transform)=="symbol" & typeof(eval(data_transform))=="closure"){
     #Transform the data
-    transformed <- data_transform(original_data)
+    data_transform_fun <- eval(data_transform)
+    transformed <- data_transform_fun(original_data)
     
     # For classification, the dependent variable should be a factor
     if(problem=="classification" & !is.factor(original_data[[dependent]])){
@@ -87,6 +88,7 @@ createtest <- function(original_data, problem = c("classification", "regression"
     #   name                    The name of this test
     #   description             A description of the test
     # 	method					The method that should be used for solving the problem: a single-item list of class method
+    #   data_transform          Name of the data_transform function
     #   extra.args              Extra arguments that should be passed to the runtest method executing this test
     #   call                    The call to the createtest function
     #Object class:
@@ -96,6 +98,7 @@ createtest <- function(original_data, problem = c("classification", "regression"
                             name = name, 
                             description = description, 
                             method = structure(method, class=method),
+                            data_transform = deparse(data_transform),
                             extra.args = c(...),
                             call = (match.call())
     ), 

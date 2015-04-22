@@ -19,12 +19,15 @@ evaluate_problem(test, prediction, observations)
 
 \item{predictions}{A vector of predictions for each row in the holdout set}
 }
+\value{
+An object of class 'evaluation', which contains a list of performance measures and a test object.
+}
 \description{
 Generic function for evaluation of test results
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{classification}: Evaluate a classification test's results. Calls \code{\link[caret]{confusionMatrix}}
+\item \code{classification}: Evaluate a classification test's results. Uses \code{\link[caret]{confusionMatrix}} to determine accuracy and other performance measures
 
 \item \code{regression}: Evaluate a regression test's results
 }}

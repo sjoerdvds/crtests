@@ -56,9 +56,9 @@ print.evaluation <- function(x, digits = max(3, getOption("digits")-3), ...){
                     paste("(", held_out_rows,
                           "rows)")) 
   # Convert the data transformation function to string
-  data_transformation <- test$data_transform)
+  data_transformation <- test$data_transform
   # If the transform function was 'identity' (the default), convert it to "None"
-  data_transformation <- ifelse(is.null(data_transformation), "None", data_transformation)
+  data_transformation <- ifelse(data_transform=="identity", "None", data_transformation)
   
   test_attribute_values <<- c(method, 
                              dependent,

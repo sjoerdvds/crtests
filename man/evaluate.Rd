@@ -14,7 +14,7 @@ evaluate(prediction, data, test, ...)
 \item{test}{The test object being evaluated}
 }
 \value{
-A vector of predictions
+An object of class 'evaluation', which contains a list of performance measures and a test object.
 }
 \description{
 Wraps the problem-specific evaluation functions by calling \code{\link{evaluate_problem}}. This wrapper is desirable, as it can perform the extraction of the holdout set (observations)

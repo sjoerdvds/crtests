@@ -17,8 +17,8 @@ test_that("Running a classification test with all default arguments works",
   {
     # Create a default test
     test <- provide_test()
-    # Run the classification test, expecting a confusionMatrix
-    expect_is(runtest(test), "confusionMatrix")
+    # Run the classification test, expecting an 'evaluation' object
+    expect_is(runtest(test), "evaluation")
 
   }
 )
@@ -30,5 +30,5 @@ test_that("Running a regression test with all default arguments works",
     test$problem <- "regression"
     class(test) <- "regression"
     test$dependent <- "Sepal.Length"
-    expect_is(runtest(test), "summaryDefault")
+    expect_is(runtest(test), "evaluation")
   })
