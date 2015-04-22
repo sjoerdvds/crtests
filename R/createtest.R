@@ -109,7 +109,7 @@ createtest <- function(original_data, problem = c("classification", "regression"
     test
     
   } else {
-    stop("data_transform is NULL or not a function: cannot be applied to the data")
+    stop("data_transform is NULL or not a quoted function: cannot be applied to the data")
   }
   
   
