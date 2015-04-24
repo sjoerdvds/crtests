@@ -4,32 +4,28 @@
 \alias{createtest}
 \title{Create a classification or regression test case}
 \usage{
-createtest(original_data, problem = c("classification", "regression"),
-  dependent, data_transform = quote(identity), train_index, method, name,
+createtest(data, problem = c("classification", "regression"), dependent,
+  data_transform = quote(identity), train_index, method, name,
   description = "", ...)
 }
 \arguments{
-\item{original_data}{A data frame}
+\item{data}{A data frame}
 
-\item{problem}{Either classification or regression. This influences how the algorithms are trained}
+\item{problem}{Either classification or regression. This influences how the algorithms are trained and what method is used to determine performance}
 
 \item{dependent}{The dependent variable: the name of the column containing the prediction goal}
 
-\item{data_transform}{A quoted function name that transforms the data.}
+\item{data_transform}{A quoted function name that transforms the data. It should maintain it in data frame form and maintain the dependent variable.}
 
 \item{train_index}{A vector of the rows to be used as training set. All other rows will form the holdout set}
 
 \item{method}{The regression or classification method}
 
+\item{name}{The name of the test. Printed in the test results}
+
 \item{description}{Optional. A more elaborate description of the test}
 
-\item{and}{what method is used to determine performance}
-
-\item{It}{should maintain it in data frame form and maintain the dependent variable.}
-
-\item{preserve_distribution}{Should class distribution (if applicable) be as similar as possible for train and test set?}
-
-\item{test}{The name of the test. Printed in the test results}
+\item{...}{Extra arguments used while running the test.}
 }
 \value{
 An object of class 'classification' or 'regression', which holds the data, method, etc. for executing the test case.

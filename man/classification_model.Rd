@@ -15,13 +15,15 @@ classification_model(method, test, x, y, training_data, ...)
 \arguments{
 \item{method}{The method for classification.}
 
+\item{test}{The test being conducted}
+
 \item{x}{The independent variables.}
 
 \item{y}{The dependent (class) variable. Should be a factor for most algorithms}
 
-\item{...}{Extra arguments to pass to the classification algorithm}
+\item{training_data}{The complete data set for training}
 
-\item{data}{The complete data set for training}
+\item{...}{Extra arguments to pass to the classification algorithm}
 }
 \value{
 The produced model

@@ -5,7 +5,7 @@
 \alias{regression_model.default}
 \title{Fit a regression model}
 \usage{
-regression_model(method, formula, train_data, ...)
+regression_model(method, formula, training_data, ...)
 
 \method{regression_model}{default}(method, formula, training_data, ...)
 }
@@ -14,7 +14,9 @@ regression_model(method, formula, train_data, ...)
 
 \item{formula}{An object of class 'formula', used to fit a model to the data}
 
-\item{data}{Train data used to fit the model}
+\item{training_data}{Train data used to fit the model}
+
+\item{...}{Further arguments}
 }
 \value{
 model	The fitted model

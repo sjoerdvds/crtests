@@ -12,6 +12,8 @@ evaluate(prediction, data, test, ...)
 \item{data}{The data list containing train and holdout data sets}
 
 \item{test}{The test object being evaluated}
+
+\item{...}{Extra arguments to evaluate}
 }
 \value{
 An object of class 'evaluation', which contains a list of performance measures and a test object.

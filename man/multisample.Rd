@@ -24,12 +24,6 @@ multisample.random(data, holdout = 0.2, iterations = 10, dependent,
 \item{holdout}{The fraction of data to be used as holdout set}
 
 \item{iterations}{Number of iterations to make}
-
-\item{data}{Data to sample}
-
-\item{dependent}{The dependent variable in the data. Used only if preserve_distribution=TRUE}
-
-\item{preserve_distribution}{Logical, only applicable if the dependent variable is a factor}
 }
 \value{
 A list of numeric vectors of length 'folds'

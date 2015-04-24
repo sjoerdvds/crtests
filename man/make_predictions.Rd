@@ -18,6 +18,8 @@ make_predictions(model, data, test, ...)
 \item{data}{The list of train and holdout data sets}
 
 \item{test}{The test being conducted}
+
+\item{...}{Extra arguments to make_predictions}
 }
 \description{
 Generic function for testing a model by making predictions

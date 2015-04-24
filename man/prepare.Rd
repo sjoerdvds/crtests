@@ -11,6 +11,8 @@ prepare(test, ...)
 }
 \arguments{
 \item{test}{The test for which data is prepared}
+
+\item{...}{Extra arguments to prepare}
 }
 \value{
 data	A list containing prepared train (\code{data$train}) and holdout (\code{data$holdout}) data frames. Extra method specific preparation is executed through a call to method_prepare

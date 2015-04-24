@@ -5,20 +5,24 @@
 \title{Create and run multiple instances of a test}
 \usage{
 multitest(data, dependent, problem = c("classification", "regression"),
-  method = c("randomForest", "rpart"), name, description = "",
-  data_transform = quote(identity), iterations = 10, holdout = 0.2,
-  cross_validation = FALSE, preserve_distribution = FALSE)
+  method, name, description = "", data_transform = quote(identity),
+  iterations = 10, holdout = 0.2, cross_validation = FALSE,
+  preserve_distribution = FALSE)
 }
 \arguments{
+\item{data}{A data frame}
+
 \item{dependent}{The dependent variable: the name of the column containing the prediction goal}
 
-\item{problem}{Either classification or regression. This influences how the algorithms are trained}
+\item{problem}{Either classification or regression. This influences how the algorithms are trained and what method is used to determine performance}
 
 \item{method}{The regression or classification method}
 
+\item{name}{The name of the test. Printed in the test results}
+
 \item{description}{Optional. A more elaborate description of the test}
 
-\item{data_transform}{A quoted function name that transforms the data.}
+\item{data_transform}{A quoted function name that transforms the data. It should maintain it in data frame form and maintain the dependent variable.}
 
 \item{iterations}{The number of times the test is to be performed. If cross-validation is used, this is the number of folds}
 

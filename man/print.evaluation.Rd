@@ -4,10 +4,12 @@
 \alias{print.evaluation}
 \title{Print an 'evaluation' object}
 \usage{
-\method{print}{evaluation}(x, digits = max(3, getOption("digits") - 3), ...)
+\method{print}{evaluation}(x, digits = max(3, getOption("digits") - 4), ...)
 }
 \arguments{
 \item{x}{Object to print}
+
+\item{digits}{Numeric. Number of digits to print. Defaults to \code{max(3, getOption("digits")-4)}}
 
 \item{...}{Further arguments to print.evaluation}
 }

@@ -15,9 +15,9 @@ evaluate_problem(test, prediction, observations)
 \arguments{
 \item{test}{The test that was run}
 
-\item{observations}{The true observations for the dependent value in the holdout set}
+\item{prediction}{A vector of predictions for each row in the holdout set}
 
-\item{predictions}{A vector of predictions for each row in the holdout set}
+\item{observations}{The true observations for the dependent value in the holdout set}
 }
 \value{
 An object of class 'evaluation', which contains a list of performance measures and a test object.

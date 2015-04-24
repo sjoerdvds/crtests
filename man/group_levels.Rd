@@ -18,10 +18,17 @@ group_levels(data, maximum_levels = 32)
 \arguments{
 \item{data}{A data.frame or factor. In the first case, \code{group_levels} is applied to each factor in the data.frame.}
 
-\item{A}{factor with at most \code{maximum_levels}, or a data.frame where each factor matches that requirement}
+\item{maximum_levels}{Numeric. The maximum number of levels allowed per factor}
+}
+\value{
+A factor with at most \code{maximum_levels}, or a data.frame where each factor matches that requirement
 }
 \description{
 Group infrequent levels in \code{data}, either a factor or a data.frame
+
+Group infrequent factor levels in a data.frame
+
+Group infrequent factor levels in a list of data.frames
 }
 \section{Methods (by class)}{
 \itemize{

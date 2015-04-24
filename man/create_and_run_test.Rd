@@ -9,17 +9,24 @@ create_and_run_test(train_index, data, dependent,
   "rpart"), name, description, data_transform = quote(identity))
 }
 \arguments{
-\item{train_index}{A vector of the rows to be used as training set. All other rows will form the holdout set}
+\item{train_index}{A vector containing the rows from \code{data} to be used as the training}
+
+\item{data}{A data frame}
 
 \item{dependent}{The dependent variable: the name of the column containing the prediction goal}
 
-\item{problem}{Either classification or regression. This influences how the algorithms are trained}
+\item{problem}{Either classification or regression. This influences how the algorithms are trained and what method is used to determine performance}
 
 \item{method}{The regression or classification method}
 
+\item{name}{The name of the test. Printed in the test results}
+
 \item{description}{Optional. A more elaborate description of the test}
 
-\item{data_transform}{A quoted function name that transforms the data.}
+\item{data_transform}{A quoted function name that transforms the data. It should maintain it in data frame form and maintain the dependent variable.}
+}
+\value{
+An object of class 'evaluation', containing the evaluated test
 }
 \description{
 A convenience function calling \code{\link{createtest}} first, then runs the test using \code{\link{runtest}}.
