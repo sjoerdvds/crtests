@@ -7,7 +7,7 @@ context("Running a test")
 provide_test <-function(){
   createtest(problem ="classification",
              method ="randomForest",
-             original_data = iris,
+             data = iris,
              name = "test test",
              train_index = sample(150,100),
              dependent= "Species")

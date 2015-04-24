@@ -4,20 +4,18 @@
 #' Create a test, which can be run using any of the available runtest functions
 #' 
 # Arguments:
-#'@param       original_data           A data frame
-#'@param       problem                 Either classification or regression. This influences how the algorithms are trained 
-#'@param                               and what method is used to determine performance
-#'@param       data_transform          A quoted function name that transforms the data. 
-#'@param                               It should maintain it in data frame form and maintain the dependent variable.
+#'@param       data                    A data frame
+#'@param       problem                 Either classification or regression. This influences how the algorithms are trained and what method is used to determine performance
+#'@param       data_transform          A quoted function name that transforms the data. It should maintain it in data frame form and maintain the dependent variable.
 #'@param       dependent               The dependent variable: the name of the column containing the prediction goal
 #'@param       train_index             A vector of the rows to be used as training set. All other rows will form the holdout set
-#'@param       preserve_distribution   Should class distribution (if applicable) be as similar as possible for train and test set?
 #'@param       method                  The regression or classification method
-#'@param       test                    The name of the test. Printed in the test results
+#'@param       name                    The name of the test. Printed in the test results
 #'@param       description             Optional. A more elaborate description of the test
+#'@param       ...                     Extra arguments used while running the test.
 #'
 #'@return An object of class 'classification' or 'regression', which holds the data, method, etc. for executing the test case.
-createtest <- function(original_data, problem = c("classification", "regression"), dependent, data_transform = quote(identity), train_index, method, name, description="", ...){
+createtest <- function(data, problem = c("classification", "regression"), dependent, data_transform = quote(identity), train_index, method, name, description="", ...){
   # The problem should not be missing and be either classification or regression
   if(missing(problem)){
     stop("problem is missing with no default")
@@ -30,8 +28,8 @@ createtest <- function(original_data, problem = c("classification", "regression"
   
   
   # If there is no data, nothing can happen
-  if(missing(original_data)){
-    stop("original_data is missing with no default")
+  if(missing(data)){
+    stop("data is missing with no default")
   }
   # Without a dependent variable, no model could be trained or tested
   if(missing(dependent)){
@@ -55,18 +53,18 @@ createtest <- function(original_data, problem = c("classification", "regression"
   if(!is.null(data_transform) & typeof(data_transform)=="symbol" & typeof(eval(data_transform))=="closure"){
     #Transform the data
     data_transform_fun <- eval(data_transform)
-    transformed <- data_transform_fun(original_data)
+    transformed <- data_transform_fun(data)
     
     # For classification, the dependent variable should be a factor
-    if(problem=="classification" & !is.factor(original_data[[dependent]])){
-      original_data[[dependent]] <- factor(original_data[[dependent]])
+    if(problem=="classification" & !is.factor(data[[dependent]])){
+      data[[dependent]] <- factor(data[[dependent]])
       warning("The dependent variable was converted to factor")
     }
 
     
     #Check if the train_index is smaller than the number of rows in the transformed. Otherwise, 
     #the holdout set would be empty
-    if(length(train_index)>=nrow(original_data)){
+    if(length(train_index)>=nrow(data)){
       stop("length(train_index) must be smaller than number of rows in the data")
     }
     #There would be no training data if the train_index is of length zero

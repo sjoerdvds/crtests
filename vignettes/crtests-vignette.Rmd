@@ -96,7 +96,7 @@ library(randomForest)
 library(caret)
 
 data(iris)
-test <- createtest(original_data=iris, 
+test <- createtest(data=iris, 
                    dependent="Species",
                    problem="classification",
                    method="randomForest",

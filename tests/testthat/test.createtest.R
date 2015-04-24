@@ -6,7 +6,7 @@ context("Creating tests")
 make_args <- function(omit=c()){
   args <- list(problem ="classification",
        method ="randomForest",
-       original_data = iris,
+       data = iris,
        name = "test test",
        train_index = sample(150,100),
        dependent= "Species"

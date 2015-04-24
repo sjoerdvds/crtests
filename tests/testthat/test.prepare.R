@@ -18,7 +18,7 @@ create_test_with_data <- function(){
   data <- rbind(data, c(NA, NA, NA))
   createtest(problem="classification",
              method="randomForest",
-             original_data = data,
+             data = data,
              dependent = "b",
              name = "A test",
              train_index = sample(301, 100)
@@ -30,7 +30,7 @@ test_that("Prepare data results in a dataset without NAs",
   {
     test <- create_test_with_data()
     
-    data <- suppressWarnings(prepare(test))
+    data <- suppressWarnings(prepare(test))$data
     expect_equal(FALSE, 
                  any(is.na(data$train)))
     expect_equal(FALSE, 
