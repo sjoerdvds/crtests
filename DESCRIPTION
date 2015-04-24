@@ -10,14 +10,16 @@ Description: Provides wrapper functions for running classification and regressio
     data to suit the algorithm's needs, training a model, testing a model, and 
     evaluating results. Also, some functions are provided to run multiple 
     instances of a test.
-License: GPL-3
+License: GPL-3 | file LICENSE
 Imports: 
   caret,
-  randomForest,
-  rpart
+  plyr,
+  stringr
 Suggests: 
   testthat,
   knitr,
-  e1071
+  e1071,
+  randomForest,
+  rpart
 LazyData: true
 VignetteBuilder: knitr
