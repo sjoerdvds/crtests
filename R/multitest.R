@@ -10,6 +10,7 @@
 #'@param		preserve_distribution	Logical, classification problems only. Should the distribution of factors in the dependent variable be as similar as possible between holdout and training sets?
 # Returns:
 #'@return		A list of class \code{'multitest_results_' + problem}, containing the test results of each iteration
+#'@export
 multitest <- function(data, dependent, problem=c("classification", "regression"), method, name, description = "", data_transform=quote(identity), iterations=10, holdout=0.2, cross_validation=FALSE, preserve_distribution=FALSE){
   #Split the data into train and test sets. The rows that are in trainIndex will be in the train set, the rows that are not will be in the test set
   samples <- list()

@@ -15,6 +15,7 @@
 #'@param       ...                     Extra arguments used while running the test.
 #'
 #'@return An object of class 'classification' or 'regression', which holds the data, method, etc. for executing the test case.
+#'@export
 createtest <- function(data, problem = c("classification", "regression"), dependent, data_transform = quote(identity), train_index, method, name, description="", ...){
   # The problem should not be missing and be either classification or regression
   if(missing(problem)){
