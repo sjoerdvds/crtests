@@ -4,7 +4,8 @@
 #'@param method	The method for classification.
 #'@param y The dependent (class) variable. Should be a factor for most algorithms
 #'@param x The independent variables.
-#'@param data	The complete data set for training
+#'@param training_data	The complete data set for training
+#'@param test The test being conducted
 #'@param ... Extra arguments to pass to the classification algorithm
 # Returns: 
 #'@return	 The produced model

@@ -50,7 +50,7 @@ argument_match_test <- function(fun, args){
               # Put a random string in place of the provided value
               args_copy[[x]] <- random_string(total_length)
               # Call the function, expecting a match.arg error
-              expect_error(do.call(fun, args_copy), "Error in match.arg")
+              testthat::expect_error(do.call(fun, args_copy), "Error in match.arg")
             } else {
               ""
             }
@@ -111,4 +111,76 @@ remove_names.matrix <- function(x){
   colnames(x) <- rep("", 
                           ncol(x))
   x
+}
+
+#' Capitalize the first letter of a word
+#' 
+#' Takes a string, and converts its first letter to upper case
+#' @param word A string
+#' @return String with first letter converted to capital
+capitalize_first <- function(word){
+  paste0(toupper(
+          substring(word, 
+                    1,
+                    1)
+          ),
+         substring(word,
+                   2)
+         )
+
+}
+
+#' Replace strings in the names of an object
+#' 
+#' Replaces strings matching the pattern in the names of the object by the replacement. If applicable, both row and column names could be replaced. This function is a simple wrapper to \code{\link[stringr]{str_replace_all}}
+#' @param object Object of which the names are to be changed
+#' @param pattern Pattern to look for, as defined by a POSIX regular expression
+#' @param replacement Replacement string
+#' @param ... extra arguments to \code{replace_names}
+#' @seealso \code{\link[stringr]{str_replace_all}}
+replace_names <- function(object, pattern, replacement, ...) UseMethod("replace_names")
+
+#' Default method that replaces names(object)
+#' @inheritParams replace_names
+#' @describeIn replace_names
+replace_names.default <- function(object, pattern = "\\.", replacement = " ", ...){
+  names(object) <- stringr::str_replace_all(names(object), 
+                               pattern = pattern, 
+                               replacement = replacement)
+  object
+}
+
+#' Replaces row.names in the object, then dispatches to the default
+#' @inheritParams replace_names
+#' @describeIn replace_names
+#' @param replace_rownames Logical. Should row names be replaced?
+#' @param replace_colnames Logical. Should column names be replaced?
+replace_names.data.frame <- function(object, pattern = "\\.", replacement = " ", replace_rownames = TRUE, replace_colnames = TRUE, ...){
+  if(replace_rownames){
+      row.names(object) <- stringr::str_replace_all(row.names(object), 
+                                       pattern, 
+                                       replacement)
+  }
+  if(replace_colnames){
+    NextMethod("replace_names")
+  } else {
+    object
+  }
+}
+
+#' Replace row.names and col.names in the object
+#' @inheritParams replace_names.data.frame
+#' @describeIn replace_names
+replace_names.matrix <- function(object, pattern = "\\.", replacement = " ", replace_rownames = TRUE, replace_colnames = TRUE, ...){
+  if(replace_rownames){
+    row.names(object) <- stringr::str_replace_all(row.names(object), 
+                                         pattern, 
+                                         replacement)
+  }
+  if(replace_colnames){
+    colnames(object) <- stringr::str_replace_all(colnames(object),
+                                        pattern,
+                                        replacement)
+  }
+  object
 }

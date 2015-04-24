@@ -25,9 +25,10 @@ multisample.cross_fold <- function(data, folds=10, dependent, preserve_distribut
     # it needs to be converted to numeric
     data_folds <- split(row.names(data), split_factor)
     data_folds <- lapply(data_folds, as.numeric)
-    # The distribution of each fold should be as similar as possible
+    
   } else {
-    data_folds <- createFolds(data[[dependent]], folds)
+    # The distribution of each fold should be as similar as possible
+    data_folds <- caret::createFolds(data[[dependent]], folds)
     
   }
   # For each fold, make a training set of the other folds
@@ -42,31 +43,28 @@ multisample.cross_fold <- function(data, folds=10, dependent, preserve_distribut
 #' 
 #'\code{random}:  Makes \code{iterations} random samples of size \code{holdout * nrow(data)}
 # Arguments:
-#'@param		data					        Data to sample
 #'@param		iterations				    Number of iterations to make
 #'@param		holdout					      The fraction of data to be used as holdout set
-#'@param		dependent				      The dependent variable in the data. Used only if preserve_distribution=TRUE
-#'@param		preserve_distribution	Logical, only applicable if the dependent variable is a factor
 #'@rdname multisample
 multisample.random <- function(data, holdout=0.2, iterations=10, dependent, preserve_distribution=FALSE){
   lapply(1:iterations, function(x, 
                                 holdout, 
                                 dependent, 
                                 preserve_distribution
-  ) {
-    train_index <- c()
-    if (preserve_distribution && method=="classification"){
-      #The class distribution in train and test should be as similar as possible. Only makes sense for classification problems: regression has no classes.
-      train_index <- createDataPartition(data[[dependent]], p=1-holdout, list=FALSE, times=1)
-    } else {
-      #The train and test sets should be constructed randomly by taking a sample. The size of the sample is rounded down, as the sample size should be an integer. 
-      train_index <- sample(1:nrow(data), round((1-holdout) * nrow(data)))
-    }
-    train_index
-  },
-  # Set arguments to anonymous inner function
-  holdout=holdout, 
-  dependent=dependent, 
-  preserve_distribution=preserve_distribution
-  )
+                                ) {
+                                  train_index <- c()
+                                  if (preserve_distribution){
+                                    #The class distribution in train and test should be as similar as possible. Only makes sense for classification problems: regression has no classes.
+                                    train_index <- caret::createDataPartition(data[[dependent]], p=1-holdout, list=FALSE, times=1)
+                                  } else {
+                                    #The train and test sets should be constructed randomly by taking a sample. The size of the sample is rounded down, as the sample size should be an integer. 
+                                    train_index <- sample(1:nrow(data), round((1-holdout) * nrow(data)))
+                                  }
+                                  train_index
+                                },
+                                # Set arguments to anonymous inner function
+                                holdout=holdout, 
+                                dependent=dependent, 
+                                preserve_distribution=preserve_distribution
+                                )
 }

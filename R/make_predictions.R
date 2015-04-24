@@ -6,6 +6,7 @@
 #'@param  	model	A classification or regression model
 #'@param		data	The list of train and holdout data sets
 #'@param		test	The test being conducted
+#'@param    ...   Extra arguments to make_predictions
 make_predictions <- function(model, data, test, ...) UseMethod("make_predictions")
 
 #'@describeIn make_predictions This function is a simple wrapper to \code{\link[stats]{predict}}, which it with the trained model and holdout data. Model classes that require extra arguments to predict can do so through a separate implementations or, less desirably, through the extra arguments.
@@ -26,5 +27,5 @@ make_predictions.rpart <- function(model, data, test, ...){
   else {
     stop(paste("Tests of type", class(test), "are not supported by make_predictions.rpart"))
   }
-  rpart::predict(model, newdata=data$holdout, type=type,...)
+  predict(model, newdata=data$holdout, type=type,...)
 }

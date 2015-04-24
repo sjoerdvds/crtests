@@ -30,6 +30,7 @@ evaluation <- function(test, measures){
 #' 
 #' Pretty prints an object of class 'evaluation'
 #' @param x Object to print
+#' @param digits Numeric. Number of digits to print. Defaults to \code{max(3, getOption("digits")-4)}
 #' @param ... Further arguments to print.evaluation
 #' @details Prints the object to look like a table
 print.evaluation <- function(x, digits = max(3, getOption("digits")-4), ...){
@@ -57,11 +58,7 @@ print.evaluation <- function(x, digits = max(3, getOption("digits")-4), ...){
   
   # Format the test class & name prettily: 'Regression Test Results' or 'Classification Test Results' etc.
   test_class <- class(test)
-  test_class_label <- paste0(toupper(substring(test_class, 
-                                       1,
-                                       1)),
-                             substring(test_class,
-                                       2),
+  test_class_label <- paste0(capitalize_first(test_class),
                              " Test Evaluation: ",
                              test$name)
   # Top line
@@ -115,7 +112,24 @@ print.evaluation <- function(x, digits = max(3, getOption("digits")-4), ...){
 #' 
 #' Produces a summary of an evaluation, consisting of the test attributes and the performance measures
 #' @param object Evaluation object to make summary of
-#' @param include_attributes Logical. Should all attributes of the test be included in the output? 
-summary.evaluation <- function(object, include_attributes=TRUE){
-  
+#' @param include_test_attributes Logical. Should all attributes of the test be included in the output? 
+#' @param ... Extra arguments to \code{summary.evaluation}
+summary.evaluation <- function(object, include_test_attributes=TRUE, ...){
+  # The output should be a transposed matrix (1 x n)
+  out <- t(
+          as.matrix(
+            object$measures
+            )
+          )
+  rownames(out) <- object$test$name
+  if(include_test_attributes){
+    test_attributes <- t(
+                        as.matrix(
+                          object$test_attributes
+                          )
+                        )
+    out <- cbind(test_attributes, 
+                 out)
+  }
+  out
 }
