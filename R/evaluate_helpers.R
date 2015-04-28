@@ -33,6 +33,7 @@ evaluation <- function(test, measures){
 #' @param digits Numeric. Number of digits to print. Defaults to \code{max(3, getOption("digits")-4)}
 #' @param ... Further arguments to print.evaluation
 #' @details Prints the object to look like a table
+#' @export
 print.evaluation <- function(x, digits = max(3, getOption("digits")-4), ...){
   test <- x$test
   measures <- x$measures
@@ -114,6 +115,7 @@ print.evaluation <- function(x, digits = max(3, getOption("digits")-4), ...){
 #' @param object Evaluation object to make summary of
 #' @param include_test_attributes Logical. Should all attributes of the test be included in the output? 
 #' @param ... Extra arguments to \code{summary.evaluation}
+#' @export
 summary.evaluation <- function(object, include_test_attributes=TRUE, ...){
   # The output should be a transposed matrix (1 x n)
   out <- t(

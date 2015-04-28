@@ -84,9 +84,11 @@ apply_levels <- function(df, df_reference){
 #' @param data A data.frame or factor. In the first case, \code{group_levels} is applied to each factor in the data.frame.
 #' @param maximum_levels Numeric. The maximum number of levels allowed per factor
 #' @return A factor with at most \code{maximum_levels}, or a data.frame where each factor matches that requirement
+#' 
 group_levels <- function(data, maximum_levels=32) UseMethod("group_levels")
 
 #' @describeIn group_levels Group infrequent levels in a factor. Takes a factor, and if that factor has more than 'maximum_levels', it makes a table of level frequencies. The top (maximum_levels-1) are left unchanged, all less frequent levels are grouped into the level "other".
+#' 
 group_levels.factor <- function(data, maximum_levels=32){
   if(length(levels(data))> maximum_levels){
     # Make a table of the factor to determine level frequencies
@@ -108,11 +110,15 @@ group_levels.factor <- function(data, maximum_levels=32){
 #' Group infrequent factor levels in a data.frame
 #'
 #'@describeIn group_levels  Takes a data.frame, and applies group_levels.factor to each column
+#'
 group_levels.data.frame <- function(data, maximum_levels=32){
   # Make sure the result is a data.frame, to maintain the original structure
   data.frame(
     sapply(data, 
-           group_levels, 
+           # group_levels needs to be wrapped: otherwise sapply doesn't know where to find the correct group_levels
+           function(x, maximum_levels){
+             group_levels(x, maximum_levels)
+           }, 
            maximum_levels=maximum_levels,
            #Do not simplify, as this turns factors into numeric vectors
            #sapply is still necessary, as it retains the column names
@@ -124,9 +130,13 @@ group_levels.data.frame <- function(data, maximum_levels=32){
 #' Group infrequent factor levels in a list of data.frames
 #'
 #'@describeIn group_levels Takes a list of data.frames and applies \code{group_levels.data.frame} to each
- group_levels.list <- function(data, maximum_levels=32){
+#'
+group_levels.list <- function(data, maximum_levels=32){
    lapply(data,
-          group_levels,
+          # group_levels needs to be wrapped: otherwise sapply doesn't know where to find the correct group_levels
+          function(x, maximum_levels){
+            group_levels(x, maximum_levels)
+            },
           maximum_levels = maximum_levels)  
  }
 
@@ -134,7 +144,8 @@ group_levels.data.frame <- function(data, maximum_levels=32){
 #' Group infrequent factor levels
 #' 
 #' The default group_levels does nothing. This is desirable behavior for any structure that is not a list, data.frame or factor: there is no meaningful way apply group_levels to this type of structure.
-#' @inheritParams group_levels
+#' @inheritParams group_levels 
+#' 
 group_levels.default <- function(data, maximum_levels=32){
   identity(data)
 }

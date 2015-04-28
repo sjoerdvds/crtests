@@ -2,7 +2,7 @@
 % Please edit documentation in R/multitest_helpers.R
 \name{print.multitest_evaluation.summary}
 \alias{print.multitest_evaluation.summary}
-\title{Print a multitest_evalution.summary object}
+\title{Print a multitest_evaluation.summary object}
 \usage{
 \method{print}{multitest_evaluation.summary}(x, digits = max(3,
   getOption("digits") - 4), ...)
@@ -15,6 +15,6 @@
 \item{...}{Further arguments to \code{print.multitest_evaluation.summary}}
 }
 \description{
-Print a multitest_evalution.summary object
+Print a multitest_evaluation.summary object
 }
 

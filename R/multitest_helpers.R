@@ -36,6 +36,7 @@ multitest_evaluation <- function(evaluations, iterations, cross_validation, pres
 #' Summary implementation for the results of a multitest
 #' @inheritParams base::summary
 #'@return		Object of class 'summary.multitest_evaluation'. Attributes are a list of \code{evaluation} objects, 
+#'@export
 summary.multitest_evaluation <- function(object,...){
   # Combine all the measures from the evaluations
   
@@ -108,11 +109,12 @@ summary.multitest_evaluation <- function(object,...){
   )
 }
 
-#' Print a multitest_evalution.summary object
+#' Print a multitest_evaluation.summary object
 #' 
 #' @param x Object to print
 #' @param digits Numeric. Number of digits to print. Defaults to \code{max(3, getOption("digits")-4)}
 #' @param ... Further arguments to \code{print.multitest_evaluation.summary}
+#' @export
 print.multitest_evaluation.summary <- function(x, digits = max(3, getOption("digits")-4), ...){
   # Regression Multiple Test Evaluation: Some Test
   #
@@ -251,6 +253,7 @@ print.multitest_evaluation.summary <- function(x, digits = max(3, getOption("dig
 #' Print a multitest_evaluation
 #' 
 #' @inheritParams base::print
+#' @export
 print.multitest_evaluation <- function(x, ...){
   summary_x <- summary(x)
   print(summary_x$measures)
