@@ -185,10 +185,17 @@ print.multitest_evaluation.summary <- function(x, digits = max(3, getOption("dig
     }
     sample_method <- paste(sample_method, 
                            "preservation of class distribution")
+    sample_method <- strwrap(sample_method, width = getOption("width") * .4)
+    names(sample_method) <- rep("", length(sample_method))
+    names(sample_method)[1] <- "Sampling method"
   }
-  
-  gen_attrs <- c(x$overall_test_attributes$other,
+  if(length(sample_method)==1){
+    gen_attrs <- c(x$overall_test_attributes$other,
                  "Sampling method" = sample_method)
+  } else {
+    gen_attrs <- c(x$overall_test_attributes$other,
+                   sample_method)
+  }
   # Before printing, 
   # determine the maximum length of any name or row.name, to make the output prettier
   
@@ -209,7 +216,8 @@ print.multitest_evaluation.summary <- function(x, digits = max(3, getOption("dig
                       ),
                       ":"
                     )
-
+  # Replace any empty names (just whitespace and semicolons)
+  gen_attr_names[grep("\\s:", gen_attr_names)] <- ""
   gen_attrs_matrix <- cbind(
                         gen_attr_names,
                         gen_attrs
