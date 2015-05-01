@@ -142,7 +142,7 @@ summary(
   multitest(data = iris,
             dependent = "Sepal.Width",
             problem = "regression",
-            method = "randomForest",
+            method = "rpart",
             name = "An example regression multitest",
             iterations = 15,
             cross_validation = FALSE,
