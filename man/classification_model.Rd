@@ -4,6 +4,7 @@
 \alias{classification_model}
 \alias{classification_model.default}
 \alias{classification_model.rpart}
+\alias{regression_model.adaboost.M1}
 \title{Generic function for creating a classification model}
 \usage{
 classification_model(method, test, x, y, training_data, ...)
@@ -11,6 +12,8 @@ classification_model(method, test, x, y, training_data, ...)
 \method{classification_model}{default}(method, test, x, y, training_data, ...)
 
 \method{classification_model}{rpart}(method, test, x, y, training_data, ...)
+
+\method{regression_model}{adaboost.M1}(method, formula, training_data, ...)
 }
 \arguments{
 \item{method}{The method for classification.}
@@ -40,5 +43,7 @@ Generic function for creating a classification model
 \item \code{rpart}: Rpart specific function for creating a classification model
 
 RPart requires a formula for classification, which is not provided by the default function
+
+\item \code{adaboost.M1}: Create a classification model using Freund & Schapire's adaboost.M1
 }}
 

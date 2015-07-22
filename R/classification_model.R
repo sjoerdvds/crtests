@@ -26,3 +26,9 @@ classification_model.rpart <- function(method, test, x, y, training_data, ...){
   f <- extract_formula(test)
   rpart::rpart(formula=f, data=training_data, method="class")
 }
+
+#' @describeIn classification_model Create a classification model using Freund & Schapire's adaboost.M1
+regression_model.adaboost.M1 <- function(method, formula, training_data, ...){
+  f <- extract_formula(test)
+  boosting(formula = f, data = training_data, coeflearn = "Freund")
+}

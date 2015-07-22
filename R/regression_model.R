@@ -18,7 +18,3 @@ regression_model.default <- function(method, formula, training_data, ...){
   f <- get(method)
   f(formula=formula, data=training_data, ...)
 }
-#' @describeIn regression_model Fit a regression model using Freund & Schapire's adaboost.M1
-regression_model.adaboost.M1 <- function(method, formula, training_data, ...){
-  adaboost.M1(formula = formula, data = training_data, coeflearn = "Freund", control = rpart.control())
-}

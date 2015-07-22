@@ -2,15 +2,12 @@
 % Please edit documentation in R/regression_model.R
 \name{regression_model}
 \alias{regression_model}
-\alias{regression_model.adaboost.M1}
 \alias{regression_model.default}
 \title{Fit a regression model}
 \usage{
 regression_model(method, formula, training_data, ...)
 
 \method{regression_model}{default}(method, formula, training_data, ...)
-
-\method{regression_model}{adaboost.M1}(method, formula, training_data, ...)
 }
 \arguments{
 \item{method}{The regression method to use}
@@ -32,7 +29,5 @@ Generic function for fitting a regression model
 \item \code{default}: Default function for fitting a regression model
 
 This \code{\link[base]{get}}s the method and calls it using formula and data
-
-\item \code{adaboost.M1}: Fit a regression model using Freund & Schapire's adaboost.M1
 }}
 
