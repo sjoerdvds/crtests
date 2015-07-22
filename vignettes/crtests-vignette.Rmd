@@ -122,6 +122,7 @@ runtest(test)
 ```{r}
 library(crtests)
 library(randomForest)
+library(rpart)
 library(caret)
 library(stringr)
 

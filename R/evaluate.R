@@ -52,7 +52,7 @@ evaluate_problem.regression <- function(test, prediction, observations){
   # Calculate the mean squared error
   mse <- mean(difference^2)
   # Calculate the mean absolute percentage error
-  mape <- mean(abs(difference)/observations)
+  mape <- sum(abs(difference)/observations)/length(observations)
   # Calculate the root mean absolute error
   rmse <- sqrt(mse)
   # Put it all together in an object of class "regression_evaluation", so it can be printed by the appropriate function
