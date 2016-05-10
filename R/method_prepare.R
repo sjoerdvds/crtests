@@ -29,3 +29,16 @@ method_prepare.randomForest <- function(method, test,  ...){
   
   test
 }
+
+#' #'@describeIn method_prepare RPart specific data preparation. Identical to \code{\link{method_prepare.randomForest}}
+method_prepare.rpart <- function(method, test, ...){ 
+  data <- test$data
+  #Levels in the data may have changed, so relevel the holdout set
+  data$holdout <- prepare_data(data$holdout, 
+                               data$train)
+  
+  # Replace the partially prepared data in the test object by the fully prepared data
+  test$data <- data
+  
+  test
+ }

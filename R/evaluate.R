@@ -12,6 +12,9 @@
 evaluate <- function(prediction, data, test, ...){
   holdout <- data$holdout
   observations <- holdout[[test$dependent]]
+  # Put the predictions and observations in the test object
+  test$prediction <- prediction
+  test$observations <- observations
   evaluate_problem(test, prediction, observations)
 }
 
@@ -52,7 +55,9 @@ evaluate_problem.regression <- function(test, prediction, observations){
   # Calculate the mean squared error
   mse <- mean(difference^2)
   # Calculate the mean absolute percentage error
-  mape <- sum(abs(difference)/observations)/length(observations)
+  # This means observations that are zero have to be dropped
+  pe <- abs(difference/observations)
+  mape <- mean(pe[which(pe < Inf)])
   # Calculate the root mean absolute error
   rmse <- sqrt(mse)
   # Put it all together in an object of class "regression_evaluation", so it can be printed by the appropriate function

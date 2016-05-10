@@ -16,7 +16,7 @@
 #'
 #'@return An object of class 'classification' or 'regression', which holds the data, method, etc. for executing the test case.
 #'@export
-createtest <- function(data, problem = c("classification", "regression"), dependent, data_transform = quote(identity), train_index, method, name, description="", ...){
+createtest <- function(data, problem = c("classification", "regression"), dependent, data_transform = identity, train_index, method, name, description="", ...){
   # The problem should not be missing and be either classification or regression
   if(missing(problem)){
     stop("problem is missing with no default")
@@ -51,10 +51,9 @@ createtest <- function(data, problem = c("classification", "regression"), depend
   # Transform the data using the provided function. 
   # If no function is provided, i.e. the default is overwritten with NULL or a non-function,
   # stop with an error: the provided function cannot be applied to the data.
-  if(!is.null(data_transform) & typeof(data_transform)=="symbol" & typeof(eval(data_transform))=="closure"){
+  if(!is.null(data_transform) & typeof(data_transform)=="closure"){
     #Transform the data
-    data_transform_fun <- eval(data_transform)
-    transformed <- data_transform_fun(data)
+    transformed <- data_transform(data)
     
     # For classification, the dependent variable should be a factor
     if(problem=="classification" & !is.factor(data[[dependent]])){

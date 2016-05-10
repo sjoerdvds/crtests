@@ -29,3 +29,10 @@ make_predictions.rpart <- function(model, data, test, ...){
   }
   predict(model, newdata=data$holdout, type=type,...)
 }
+
+#' @describeIn make_predictions Calls predict.boosting on the created model
+make_predictions.boosting <- function(model, data, test, ...){
+  print("Called adaboost")
+  predictions <- predict(model, newdata = data$holdout)
+  predictions$class
+}

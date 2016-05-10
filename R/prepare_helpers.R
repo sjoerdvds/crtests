@@ -79,6 +79,7 @@ apply_levels <- function(df, df_reference){
   
 }
 
+
 #' Group infrequent levels in \code{data}, either a factor or a data.frame
 #' 
 #' @param data A data.frame or factor. In the first case, \code{group_levels} is applied to each factor in the data.frame.
