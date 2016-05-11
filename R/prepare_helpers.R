@@ -8,6 +8,9 @@
 #'@param	relevel			Logical. Should the df be releveled with df_reference's factor levels?
 #'@return A data frame stripped of missing values
 prepare_data <- function(df, df_reference, relevel=TRUE){
+  # Store the original number of rows without NAs, to determine if NAs where introduced by releveling
+  original_rows <- nrow(na.omit(df))
+  df_missing_rows <- nrow(df) - original_rows
   
   if (relevel & missing(df_reference)){
     stop("Cannot relevel data without reference")
@@ -21,12 +24,11 @@ prepare_data <- function(df, df_reference, relevel=TRUE){
   # Values in df that had a level not in df_reference were replaced by NA by releveling.
   df_prepared <- na.omit(df)
   
-  # Determine if rows were removed due to NAs introduced by releveling. If so, throw a warning
-  df_rows_removed <- (nrow(df) - nrow(df_prepared))
+  df_nas_introduced <- (original_rows - nrow(df_prepared))
   
-  if(df_rows_removed > 0){
-    warn <- c("NAs introduced in preparing data set. Therefore,", df_rows_removed)
-    if(df_rows_removed==1){
+  if(df_nas_introduced > 0){
+    warn <- c("NAs introduced in preparing data set. Therefore,", df_nas_introduced)
+    if(df_nas_introduced==1){
       warn <- c(warn, "row was removed")
     }
     else{
@@ -35,6 +37,14 @@ prepare_data <- function(df, df_reference, relevel=TRUE){
     warning(paste(warn, collapse=" "))
   }
   
+  if(df_missing_rows > 0){
+    label <- "rows"
+    if(df_missing_rows==1){
+      label <- "row"
+    }
+    warn <- c(df_missing_rows, label, "rows had missing data and were removed")
+    warning(paste(warn,collapse=" "))
+  }
   # If somehow all rows in the df set were removed, it has no purpose anymore.
   # Therefore, throw an error
   if(nrow(df_prepared)==0){

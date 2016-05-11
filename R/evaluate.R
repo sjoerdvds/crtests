@@ -57,7 +57,7 @@ evaluate_problem.regression <- function(test, prediction, observations){
   # Calculate the mean absolute percentage error
   # This means observations that are zero have to be dropped
   pe <- abs(difference/observations)
-  mape <- mean(pe[which(pe < Inf)])
+  mape <- 100 * mean(pe[which(pe < Inf)])
   # Calculate the root mean absolute error
   rmse <- sqrt(mse)
   # Put it all together in an object of class "regression_evaluation", so it can be printed by the appropriate function

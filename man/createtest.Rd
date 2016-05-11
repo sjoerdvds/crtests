@@ -5,8 +5,8 @@
 \title{Create a classification or regression test case}
 \usage{
 createtest(data, problem = c("classification", "regression"), dependent,
-  data_transform = quote(identity), train_index, method, name,
-  description = "", ...)
+  data_transform = identity, train_index, method, name, description = "",
+  ...)
 }
 \arguments{
 \item{data}{A data frame}

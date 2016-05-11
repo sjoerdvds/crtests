@@ -14,6 +14,7 @@ runtest.default <- function(test, ...){
   model 	<- train_model(test, 
                          test$data, 
                          ...)
+  test$model <- model
   prediction 	<- make_predictions(model, 
                                   test$data, 
                                   test, 
