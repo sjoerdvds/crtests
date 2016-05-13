@@ -18,8 +18,8 @@ prepare.default <- function(test, ...){
   reference <- rbind(train, holdout)
   # Some algorithms cannot deal with different levels in the same columns between train and holdout set. 
   # As releveling should not cause problems for other algorithms, this is done by default.
-  holdout_prepared <- prepare_data(holdout, reference)
-  train_prepared <- prepare_data(train, reference)
+  holdout_prepared <- prepare_data(holdout, reference, dependent = test$dependent, drop.nas = "dependent")
+  train_prepared <- prepare_data(train, reference, dependent = test$dependent, drop.nas = "dependent")
   # Replace the test data by the partially prepared data 
   test$data <- list(train=train_prepared, 
                     holdout=holdout_prepared)

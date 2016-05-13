@@ -17,6 +17,7 @@
 #'@return An object of class 'classification' or 'regression', which holds the data, method, etc. for executing the test case.
 #'@export
 createtest <- function(data, problem = c("classification", "regression"), dependent, data_transform = identity, train_index, method, name, description="", ...){
+ 
   # The problem should not be missing and be either classification or regression
   if(missing(problem)){
     stop("problem is missing with no default")
@@ -53,6 +54,7 @@ createtest <- function(data, problem = c("classification", "regression"), depend
   # stop with an error: the provided function cannot be applied to the data.
   if(!is.null(data_transform) & typeof(data_transform)=="closure"){
     #Transform the data
+    
     transformed <- data_transform(data)
     
     # For classification, the dependent variable should be a factor
@@ -96,7 +98,7 @@ createtest <- function(data, problem = c("classification", "regression"), depend
                             name = name, 
                             description = description, 
                             method = structure(method, class=method),
-                            data_transform = deparse(data_transform),
+                            data_transform = as.character(substitute(data_transform)),
                             extra.args = c(...),
                             call = (match.call())
     ), 
@@ -107,7 +109,7 @@ createtest <- function(data, problem = c("classification", "regression"), depend
     test
     
   } else {
-    stop("data_transform is NULL or not a quoted function: cannot be applied to the data")
+    stop("data_transform is NULL or not a function: cannot be applied to the data")
   }
   
   

@@ -5,53 +5,100 @@
 # Arguments:
 #'@param	df The data frame that is to be prepared
 #'@param	df_reference An optional reference data frame, whose factor levels are to be applied to df
+#'@param  dependent The dependent variable of the data
 #'@param	relevel			Logical. Should the df be releveled with df_reference's factor levels?
+#'@param  drop.nas    Character vector denoting of which columns the NAs should be removed. See \code{\link{drop_na}} for the available strategies
+#'@importFrom stats na.omit
 #'@return A data frame stripped of missing values
-prepare_data <- function(df, df_reference, relevel=TRUE){
-  # Store the original number of rows without NAs, to determine if NAs where introduced by releveling
-  original_rows <- nrow(na.omit(df))
-  df_missing_rows <- nrow(df) - original_rows
+prepare_data <- function(df, df_reference, dependent, relevel=TRUE, drop.nas = c("dependent","predictors", "all", "none")){
+  if(missing(df)){
+    stop("Cannot prepare data if data is missing.")
+  }
+  
+  drop.nas <- match.arg(drop.nas)
+  
+  # The original number of rows should be stored, so the number of rows that are removed can be messaged.  
+  original_rows <- nrow(df)
+  missing_rows <- 0
+  
+  if(drop.nas %in% c("dependent", "predictors") & missing(dependent)){
+    stop("Cannot remove NAs in predictors or dependent if the dependent is missing.")
+  } 
+  df_prepared <- drop_na(strategy = drop.nas, 
+                         df = df, 
+                         dependent = dependent)
+  
+  # Only if rows were potentially dropped by the NA operation, should the user be notified of how many rows were dropped (if any).
+  if(drop.nas %in% c("predictors", "dependent", "all")){
+    missing_rows <- original_rows - nrow(df_prepared) 
+    if(missing_rows > 0){
+      label <- "rows"
+      if(missing_rows==1){
+        label <- "row"
+      }
+      warn <- c("Removed",missing_rows, label, "with missing data.")
+      warning(paste(warn,collapse=" "))
+    }
+  }
   
   if (relevel & missing(df_reference)){
     stop("Cannot relevel data without reference")
   }
-  else if(relevel & !missing(df_reference)){
+  if(relevel & !missing(df_reference)){
     # Apply the releveling function to make sure all columns in df have the same factors as those in 
     # the reference data frame. 
-    df <- apply_levels(df, df_reference)
+    df_prepared <- apply_levels(df_prepared, df_reference)
   }
-  # Remove missing values.
-  # Values in df that had a level not in df_reference were replaced by NA by releveling.
-  df_prepared <- na.omit(df)
   
-  df_nas_introduced <- (original_rows - nrow(df_prepared))
-  
-  if(df_nas_introduced > 0){
-    warn <- c("NAs introduced in preparing data set. Therefore,", df_nas_introduced)
-    if(df_nas_introduced==1){
-      warn <- c(warn, "row was removed")
+  # A complete row is a row that does not have a NA where it should not have one (e.g. in the predictors or dependent)
+  new_missing_rows <- switch(drop.nas,
+                              "predictors" = na_count(df_prepared[, -which(names(df_prepared) == dependent)]),
+                              "dependent"  = na_count(df_prepared[[dependent]]),
+                              "all"        = na_count(df_prepared),
+                              "none"       = na_count(df_prepared)
+  )
+  nas_introduced <- new_missing_rows - missing_rows
+  # Determine if NAs were introduced by releveling, and if so, if something should be done about it.
+  if(nas_introduced > 0){
+    label <- "rows"
+    if(nas_introduced == 1){
+      label <- "row"
     }
-    else{
-      warn <- c(warn, "rows were removed")
+    warn <- c(nas_introduced, label, "with NAs introduced after releveling.")
+    if(drop.nas %in% c("predictors", "dependent", "all")){
+      df_prepared <- drop_na(strategy = drop.nas, 
+                             df = df,
+                             dependent = dependent)
+      
+      warn <- c(warn, "Therefore,", nas_introduced, label, "were removed.")
     }
     warning(paste(warn, collapse=" "))
   }
-  
-  if(df_missing_rows > 0){
-    label <- "rows"
-    if(df_missing_rows==1){
-      label <- "row"
-    }
-    warn <- c(df_missing_rows, label, "rows had missing data and were removed")
-    warning(paste(warn,collapse=" "))
-  }
+
   # If somehow all rows in the df set were removed, it has no purpose anymore.
   # Therefore, throw an error
   if(nrow(df_prepared)==0){
-    stop("After removing NAs, 0 rows remained in the data set")
+    stop("After preparing data, 0 rows remained in the data set")
   }
+  
   df_prepared
+
 }
+
+#' Remove NAs according to a strategy
+#' 
+#' @param strategy Character string denoting how NAs should be dealt with. "dependent" means rows with NA in the dependent variable are dropped. "predictors" means rows with NA in an independent variable are dropped. "all" means rows with NA in any column are dropped. "none" means NAs are ignored.
+#' @param df Data frame to remove NAs from
+#' @param dependent Dependent variable of the data frame
+#' @return A data.frame where \code{strategy} has been applied to remove data
+drop_na <- function(strategy = c("dependent","predictors", "all", "none"), df, dependent){
+  switch(strategy,
+         "predictors" = df[is_complete_row(df[,-which(names(df) == dependent)]),],
+         "dependent"  = df[!is.na(df[[dependent]]),],
+         "all"        = na.omit(df),
+         "none"       = identity(df))
+}
+
 
 #'Converts the column factor levels in \code{df} to those in \code{df_reference}
 #'
@@ -161,3 +208,45 @@ group_levels.default <- function(data, maximum_levels=32){
   identity(data)
 }
 
+
+#' Count the number of NAs in an object
+#' 
+#' @param x An object, either a vector or a data.frame
+#' @param ... Extra arguments to na_count
+na_count <- function(x, ...) UseMethod("na_count")
+
+#' @inheritParams  na_count
+#' @param columns Vector of column names
+#' @describeIn na_count If columns are specified, returns the maximum of the count of NAs for those columns. Otherwise, it returns the number of rows that have a NA in any column.
+na_count.data.frame <- function(x, columns = c(), ...){
+  if(!missing(columns) & length(columns) > 0){
+    na_counts <- lapply(columns, 
+                        function(column){
+                          na_count(x[[column]])
+                        })
+    max(unlist(na_counts))
+  } else {
+    original <- nrow(x)
+    nas <- nrow(na.omit(x))
+    original - nas
+  }
+}
+
+#' @inheritParams na_count
+#' @describeIn na_count Calls \code{\link{na.omit}} on \code{x}, and returns the length of the result. This is only meaningful for one-dimensional objects (vectors).
+na_count.default <- function(x, ...){
+  original <- length(x)
+  nas <- length(na.omit(x))
+  original - nas
+}
+
+#' Determine if the rows in a data.frame have NAs
+#' 
+#' @param data A data.frame
+#' @return A vector of length \code{nrow(data)} containing whether that row has \code{\link{NA}}s.
+is_complete_row <- function(data){
+  complete <- data.frame(!is.na(data))
+  # The sum of a row is the number of 'TRUE' values in that column, i.e. how many complete elements there are. If it is lower than the number of columns in the data, the row is incomplete.
+  rowSums(complete) == ncol(data)
+  
+}

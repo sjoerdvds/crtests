@@ -5,7 +5,7 @@
 \title{Create and run multiple instances of a test}
 \usage{
 multitest(data, dependent, problem = c("classification", "regression"),
-  method, name, description = "", data_transform = quote(identity),
+  method, name, description = "", data_transform = identity,
   iterations = 10, holdout = 0.2, cross_validation = FALSE,
   preserve_distribution = FALSE)
 }

@@ -77,10 +77,10 @@ test_that("Cannot create a test without data, problem, dependent, method, train_
   data(iris)
   args <- make_args()
   # List of expected outcomes
-  outcomes <- rep("",length(args))
+  outcomes <- rep("FAIL",length(args))
   names(outcomes) <- names(args)
   # Test what happens when createtest is called with missing arguments, to see if missing values are handled correctly
-  missing_argument_test(createtest, args, expect_error, outcomes)
+  missing_argument_test(createtest, args, outcomes)
   # Test what happens when createtest is called with values that lead to an match.arg error
   argument_match_test(createtest,args)
 }

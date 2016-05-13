@@ -2,14 +2,28 @@
 % Please edit documentation in R/util.R
 \name{remove_names}
 \alias{remove_names}
+\alias{remove_names.matrix}
 \title{Set any names of x to ""}
 \usage{
 remove_names(x)
+
+\method{remove_names}{matrix}(x)
 }
 \arguments{
 \item{x}{An object that has a 'names' property, typically a matrix, list or data.frame}
+
+\item{matrix}{Matrix to 'remove' colnames and rownames from}
+}
+\value{
+Matrix where colnames and rownames consist of only ""
 }
 \description{
 Set any names of x to ""
+
+Set row and column names to "" for pretty printing
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{matrix}: Remove names from a matrix
+}}
 

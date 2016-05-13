@@ -8,10 +8,9 @@ NULL
 #' omitting one argument
 #' @param fun Function to test
 #' @param args Complete \code{list} of required arguments to \code{fun}
-#' @param testthat Test function to run on every iteration
-#' @param outcomes List of length \code{args} with expected outcomes for each test. Names should match those of \code{args}
+#' @param outcomes List of length \code{args} with expected outcomes for each test. Names should match those of \code{args}. Values should be either "FAIL", if the test is expected to throw an error, or anything else if it is expected to pass.
 #' @rdname util
-missing_argument_test <- function(fun, args, testthat=testthat::expect_error, outcomes){
+missing_argument_test <- function(fun, args, outcomes){
   # Only works if the names in outcomes are the same as those in args
   if(all(names(outcomes)%in%names(args))){
     # Go through the arguments by name
@@ -19,8 +18,12 @@ missing_argument_test <- function(fun, args, testthat=testthat::expect_error, ou
            function(x){
              # Take out one argument
              incomplete_args <- args[-which(names(args)==x)]
+             outcome <- NULL
+             if(outcomes[[x]] != "FAIL"){
+               outcome <- NA
+             }
              # Run the testthat function
-             testthat(do.call(fun,incomplete_args), outcomes[[x]])
+             testthat::expect_error(do.call(fun,incomplete_args), regexp = outcome)
            })  
   } else {
     stop("Outcomes names do not match argument names")
@@ -50,7 +53,7 @@ argument_match_test <- function(fun, args){
               # Put a random string in place of the provided value
               args_copy[[x]] <- random_string(total_length)
               # Call the function, expecting a match.arg error
-              testthat::expect_error(do.call(fun, args_copy), "Error in match.arg")
+              testthat::expect_error(do.call(fun, args_copy), NULL)
             } else {
               ""
             }
@@ -104,7 +107,7 @@ remove_names <- function(x) UseMethod("remove_names")
 #' Set row and column names to "" for pretty printing
 #' @param matrix Matrix to 'remove' colnames and rownames from
 #' @return Matrix where colnames and rownames consist of only ""
-#' @describeIn remove_names
+#' @describeIn remove_names Remove names from a matrix
 remove_names.matrix <- function(x){
   rownames(x) <- rep("", 
                           nrow(x))
@@ -142,7 +145,7 @@ replace_names <- function(object, pattern, replacement, ...) UseMethod("replace_
 
 #' Default method that replaces names(object)
 #' @inheritParams replace_names
-#' @describeIn replace_names
+#' @describeIn replace_names Replace names of an object
 replace_names.default <- function(object, pattern = "\\.", replacement = " ", ...){
   names(object) <- stringr::str_replace_all(names(object), 
                                pattern = pattern, 
@@ -152,7 +155,7 @@ replace_names.default <- function(object, pattern = "\\.", replacement = " ", ..
 
 #' Replaces row.names in the object, then dispatches to the default
 #' @inheritParams replace_names
-#' @describeIn replace_names
+#' @describeIn replace_names Replace names of a data.frame
 #' @param replace_rownames Logical. Should row names be replaced?
 #' @param replace_colnames Logical. Should column names be replaced?
 replace_names.data.frame <- function(object, pattern = "\\.", replacement = " ", replace_rownames = TRUE, replace_colnames = TRUE, ...){
@@ -170,7 +173,7 @@ replace_names.data.frame <- function(object, pattern = "\\.", replacement = " ",
 
 #' Replace row.names and col.names in the object
 #' @inheritParams replace_names.data.frame
-#' @describeIn replace_names
+#' @describeIn replace_names Replace names in a matrix
 replace_names.matrix <- function(object, pattern = "\\.", replacement = " ", replace_rownames = TRUE, replace_colnames = TRUE, ...){
   if(replace_rownames){
     row.names(object) <- stringr::str_replace_all(row.names(object), 

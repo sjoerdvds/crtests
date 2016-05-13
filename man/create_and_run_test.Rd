@@ -6,7 +6,8 @@
 \usage{
 create_and_run_test(train_index, data, dependent,
   problem = c("classification", "regression"), method = c("randomForest",
-  "rpart"), name, description, data_transform = quote(identity))
+  "rpart"), name, description, data_transform = identity,
+  data_transform_name = "identity")
 }
 \arguments{
 \item{train_index}{A vector containing the rows from \code{data} to be used as the training}
@@ -24,6 +25,8 @@ create_and_run_test(train_index, data, dependent,
 \item{description}{Optional. A more elaborate description of the test}
 
 \item{data_transform}{A quoted function name that transforms the data. It should maintain it in data frame form and maintain the dependent variable.}
+
+\item{data_transform_name}{The name of the data transformation function}
 }
 \value{
 An object of class 'evaluation', containing the evaluated test

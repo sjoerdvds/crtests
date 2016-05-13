@@ -20,12 +20,20 @@ method_prepare.randomForest <- function(method, test,  ...){
   data <- group_levels(data = test$data, 
                        maximum_levels = 32)
   
+  reference <- rbind(data$train, data$holdout)
+  train_prepared <- prepare_data(data$train,
+                             reference,
+                             dependent = test$dependent,
+                             drop.nas = "all")
   #Levels in the data may have changed, so relevel the holdout set
-  data$holdout <- prepare_data(data$holdout, 
-                               data$train)
+  holdout_prepared <- prepare_data(data$holdout, 
+                               reference,
+                               dependent = test$dependent,
+                               drop.nas = "all")
   
   # Replace the partially prepared data in the test object by the fully prepared data
-  test$data <- data
+  test$data <- list(train = train_prepared,
+                    holdout = holdout_prepared)
   
   test
 }

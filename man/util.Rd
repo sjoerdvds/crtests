@@ -5,16 +5,14 @@
 \alias{util}
 \title{Utility functions}
 \usage{
-missing_argument_test(fun, args, testthat = testthat::expect_error, outcomes)
+missing_argument_test(fun, args, outcomes)
 }
 \arguments{
 \item{fun}{Function to test}
 
 \item{args}{Complete \code{list} of required arguments to \code{fun}}
 
-\item{testthat}{Test function to run on every iteration}
-
-\item{outcomes}{List of length \code{args} with expected outcomes for each test. Names should match those of \code{args}}
+\item{outcomes}{List of length \code{args} with expected outcomes for each test. Names should match those of \code{args}. Values should be either "FAIL", if the test is expected to throw an error, or anything else if it is expected to pass.}
 }
 \description{
 Utility functions

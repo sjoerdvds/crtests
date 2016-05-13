@@ -4,14 +4,19 @@
 \alias{prepare_data}
 \title{Prepare data for training or testing.}
 \usage{
-prepare_data(df, df_reference, relevel = TRUE)
+prepare_data(df, df_reference, dependent, relevel = TRUE,
+  drop.nas = c("dependent", "predictors", "all", "none"))
 }
 \arguments{
 \item{df}{The data frame that is to be prepared}
 
 \item{df_reference}{An optional reference data frame, whose factor levels are to be applied to df}
 
+\item{dependent}{The dependent variable of the data}
+
 \item{relevel}{Logical. Should the df be releveled with df_reference's factor levels?}
+
+\item{drop.nas}{Character vector denoting of which columns the NAs should be removed. See \code{\link{drop_na}} for the available strategies}
 }
 \value{
 A data frame stripped of missing values
