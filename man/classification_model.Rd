@@ -2,7 +2,7 @@
 % Please edit documentation in R/classification_model.R
 \name{classification_model}
 \alias{classification_model}
-\alias{classification_model.adaboost.M1}
+\alias{classification_model.boosting}
 \alias{classification_model.default}
 \alias{classification_model.rpart}
 \title{Generic function for creating a classification model}
@@ -13,8 +13,7 @@ classification_model(method, test, x, y, training_data, ...)
 
 \method{classification_model}{rpart}(method, test, x, y, training_data, ...)
 
-\method{classification_model}{adaboost.M1}(method, test, x, y, training_data,
-  ...)
+\method{classification_model}{boosting}(method, test, x, y, training_data, ...)
 }
 \arguments{
 \item{method}{The method for classification.}
@@ -45,6 +44,6 @@ Generic function for creating a classification model
 
 RPart requires a formula for classification, which is not provided by the default function
 
-\item \code{adaboost.M1}: Create a classification model using Freund & Schapire's adaboost.M1
+\item \code{boosting}: Create a classification model using Freund & Schapire's adaboost.M1
 }}
 

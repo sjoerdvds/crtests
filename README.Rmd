@@ -13,3 +13,82 @@ knitr::opts_chunk$set(
 ```
 
 [![Travis-CI Build Status](https://travis-ci.org/sjoerdvds/crtests.svg?branch=master)](https://travis-ci.org/sjoerdvds/crtests)
+
+The aim of `Classification and Regression Tests` is to make the process of running classifier and regression tests easier. Each classifier and regression technique available in R, such as Adaboost, Random Forests, or Classification and Regression Trees, seems to have slightly different requirements for the data, such as whether `NA`s are allowed. Furthermore, each technique can have (slightly) different parameters for training a model and making predictions.
+
+This package provides a single API for making predictions based on a regression model or classification model, that makes sure the data is cleaned in such a way that the technique can process it with a minimal amount of problems. The results of a test are presented in a consistent way. 
+
+Basically, the aim of `crtests` is to make running a classifier or regression test as simple as providing data, selecting a technique. Several techniques are supported and verified 'out of the box': Random Forests for regression and classification through the [`randomForest` package](https://cran.r-project.org/web/packages/randomForest/index.html); CART for regression and classification through the [`rpart` package](https://cran.r-project.org/web/packages/rpart/index.html); Adaboost for regression through the [`gbm` package](https://cran.r-project.org/web/packages/gbm/index.html) and Adaboost for classification through the `boosting` function from the [`adabag` package](https://cran.r-project.org/web/packages/adabag/index.html); linear regression through [`lm`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html).
+
+`crtests` splits the classifier/regression testing process into multiple steps, each of which can be adapted to other techniques with requirements of their own. See the "extending" vignette to see how `crtests` can be made to work with your favorite technique, if it does not work out of the box.
+
+`crtests` can be used both for single tests, where a single sample of data is used as a training set, and for multiple tests, where multiple samples of training data are created, and a test is run on each. The latter supports cross validation.
+
+## Using crtests: example
+### Single test with one technique and one training sample
+```{r}
+library(crtests)
+library(randomForest)
+library(caret)
+
+data(iris)
+# A classification test
+test <- createtest(data = iris, 
+                   dependent = "Species",
+                   problem = "classification",
+                   method = "randomForest",
+                   name = "An example classification test",
+                   train_index = sample(150, 100)
+                   )
+runtest(test)
+
+# A regression test
+test <- createtest(data = iris,
+                   dependent = "Sepal.Width",
+                   problem = "regression",
+                   method = "randomForest",
+                   name = "An example regression test",
+                   train_index = sample(150,100)
+                   )
+runtest(test)
+
+```
+
+### Multiple tests with one technique and multiple training samples
+```{r}
+library(crtests)
+library(randomForest)
+library(rpart)
+library(caret)
+library(stringr)
+
+# A classification multitest
+summary(
+  multitest(data = iris,
+            dependent = "Species",
+            problem = "classification",
+            method = "randomForest",
+            name = "An example classification multitest",
+            iterations = 10,
+            cross_validation = TRUE,
+            preserve_distribution = TRUE
+           )
+)
+
+# A regression multitest
+summary(
+  multitest(data = iris,
+            dependent = "Sepal.Width",
+            problem = "regression",
+            method = "rpart",
+            name = "An example regression multitest",
+            iterations = 15,
+            cross_validation = FALSE
+           )
+)
+```
+
+## Installing the latest version of crtests
+1. Install the release version of `devtools` from CRAN: `install.packages(devtools)`
+2. Install `crtests` from GitHub:
+   `devtools::install_github("sjoerdvds/crtests")`
