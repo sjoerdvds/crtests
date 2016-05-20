@@ -1,6 +1,6 @@
 Package: crtests
 Type: Package
-Title: Classification and regression tests
+Title: Classification and Regression Tests
 Version: 0.2.1
 Date: 2016-05-13
 Authors@R: person("Sjoerd", "van der Spoel", , "R@sjoerdvanderspoel.nl", role = c("aut", "cre"))
