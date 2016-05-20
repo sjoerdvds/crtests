@@ -21,7 +21,8 @@ Suggests:
     e1071,
     randomForest,
     rpart,
-    adabag
+    adabag,
+    rmarkdown
 LazyData: true
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
