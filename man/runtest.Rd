@@ -21,4 +21,19 @@ Run a classification or regression test
 \itemize{
 \item \code{default}: The default test run subsequently calls \code{\link{prepare}}, \code{\link{train_model}}, \code{\link{make_predictions}},  \code{\link{evaluate}}
 }}
+\examples{
+data(iris)
+# A classification test
+test <- createtest(data = iris, 
+                  dependent = "Species",
+                  problem = "classification",
+                  method = "randomForest",
+                  name = "An example classification test",
+                  train_index = sample(150, 100)
+)
+\dontrun{
+# Run the test
+runtest(test)
+}
+}
 

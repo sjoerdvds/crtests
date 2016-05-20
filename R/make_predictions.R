@@ -33,7 +33,12 @@ make_predictions.rpart <- function(model, data, test, ...){
 
 #' @describeIn make_predictions Calls predict.boosting on the created model
 make_predictions.boosting <- function(model, data, test, ...){
-  print("Called adaboost")
+ # print("Called adaboost")
   predictions <- predict(model, newdata = data$holdout)
   predictions$class
+}
+
+#' @describeIn make_predictions Calls predict.gbm on the created model with \code{n.trees} = 100
+make_predictions.gbm <- function(model, data, test, ...){
+  predictions <- predict(model, newdata = data$holdout, n.trees = 100)
 }

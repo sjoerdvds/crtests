@@ -17,4 +17,26 @@
 \description{
 Print a multitest_evaluation.summary object
 }
+\examples{
+\dontrun{
+library(crtests)
+library(randomForest)
+library(rpart)
+library(caret)
+library(stringr)
+
+# A classification multitest. The result is an object of class multitest_evaluation
+multitest_evaluation <- multitest(data = iris,
+                                  dependent = "Species",
+                                  problem = "classification",
+                                  method = "randomForest",
+                                  name = "An example classification multitest",
+                                  iterations = 10,
+                                  cross_validation = TRUE,
+                                  preserve_distribution = TRUE
+)
+print(summary(multitest_evaluation))
+
+}
+}
 

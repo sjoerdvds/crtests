@@ -17,4 +17,26 @@ Object of class 'summary.multitest_evaluation'. Attributes are a list of \code{e
 \description{
 Summary implementation for the results of a multitest
 }
+\examples{
+\dontrun{
+library(crtests)
+library(randomForest)
+library(rpart)
+library(caret)
+library(stringr)
+
+# A classification multitest. The result is an object of class multitest_evaluation
+multitest_evaluation <- multitest(data = iris,
+                                  dependent = "Species",
+                                  problem = "classification",
+                                  method = "randomForest",
+                                  name = "An example classification multitest",
+                                  iterations = 10,
+                                  cross_validation = TRUE,
+                                  preserve_distribution = TRUE
+)
+summary(multitest_evaluation)
+
+}
+}
 

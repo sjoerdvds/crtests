@@ -16,6 +16,28 @@
 #'
 #'@return An object of class 'classification' or 'regression', which holds the data, method, etc. for executing the test case.
 #'@export
+#'
+#'@examples
+#'data(iris)
+#'# A classification test
+#'test <- createtest(data = iris, 
+#'                   dependent = "Species",
+#'                   problem = "classification",
+#'                   method = "randomForest",
+#'                   name = "An example classification test",
+#'                   train_index = sample(150, 100)
+#')
+#'
+#'# A regression test
+#'test <- createtest(data = iris, 
+#'                   dependent = "Sepal.Width",
+#'                   problem = "regression",
+#'                   method = "randomForest",
+#'                   name = "An example regression test",
+#'                   train_index = sample(150, 100)
+#')
+#'
+
 createtest <- function(data, problem = c("classification", "regression"), dependent, data_transform = identity, train_index, method, name, description="", ...){
  
   # The problem should not be missing and be either classification or regression

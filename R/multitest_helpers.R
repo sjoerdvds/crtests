@@ -37,6 +37,28 @@ multitest_evaluation <- function(evaluations, iterations, cross_validation, pres
 #' @inheritParams base::summary
 #'@return		Object of class 'summary.multitest_evaluation'. Attributes are a list of \code{evaluation} objects, 
 #'@export
+#'
+#'@examples
+#'\dontrun{
+#' library(crtests)
+#' library(randomForest)
+#' library(rpart)
+#' library(caret)
+#' library(stringr)
+#' 
+#' # A classification multitest. The result is an object of class multitest_evaluation
+#' multitest_evaluation <- multitest(data = iris,
+#'                                   dependent = "Species",
+#'                                   problem = "classification",
+#'                                   method = "randomForest",
+#'                                   name = "An example classification multitest",
+#'                                   iterations = 10,
+#'                                   cross_validation = TRUE,
+#'                                   preserve_distribution = TRUE
+#' )
+#' summary(multitest_evaluation)
+#' 
+#' }
 summary.multitest_evaluation <- function(object,...){
   # Combine all the measures from the evaluations
   
@@ -115,6 +137,28 @@ summary.multitest_evaluation <- function(object,...){
 #' @param digits Numeric. Number of digits to print. Defaults to \code{max(3, getOption("digits")-4)}
 #' @param ... Further arguments to \code{print.multitest_evaluation.summary}
 #' @export
+#' 
+#' @examples
+#'\dontrun{
+#' library(crtests)
+#' library(randomForest)
+#' library(rpart)
+#' library(caret)
+#' library(stringr)
+#' 
+#' # A classification multitest. The result is an object of class multitest_evaluation
+#' multitest_evaluation <- multitest(data = iris,
+#'                                   dependent = "Species",
+#'                                   problem = "classification",
+#'                                   method = "randomForest",
+#'                                   name = "An example classification multitest",
+#'                                   iterations = 10,
+#'                                   cross_validation = TRUE,
+#'                                   preserve_distribution = TRUE
+#' )
+#' print(summary(multitest_evaluation))
+#' 
+#' }
 print.multitest_evaluation.summary <- function(x, digits = max(3, getOption("digits")-4), ...){
   # Regression Multiple Test Evaluation: Some Test
   #

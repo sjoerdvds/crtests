@@ -34,6 +34,22 @@ evaluation <- function(test, measures){
 #' @param ... Further arguments to print.evaluation
 #' @details Prints the object to look like a table
 #' @export
+#' 
+#' @examples 
+#'data(iris)
+#'# A classification test
+#'test <- createtest(data = iris, 
+#'                   dependent = "Species",
+#'                   problem = "classification",
+#'                   method = "randomForest",
+#'                   name = "An example classification test",
+#'                   train_index = sample(150, 100)
+#')
+#'\dontrun{
+#'# Run the test. The result is an object of class "evaluation"
+#'evaluation <- runtest(test) 
+#'print(evaluation)
+#'}
 print.evaluation <- function(x, digits = max(3, getOption("digits")-4), ...){
   test <- x$test
   measures <- x$measures
@@ -116,6 +132,22 @@ print.evaluation <- function(x, digits = max(3, getOption("digits")-4), ...){
 #' @param include_test_attributes Logical. Should all attributes of the test be included in the output? 
 #' @param ... Extra arguments to \code{summary.evaluation}
 #' @export
+#' 
+#' @examples 
+#'data(iris)
+#'# A classification test
+#'test <- createtest(data = iris, 
+#'                   dependent = "Species",
+#'                   problem = "classification",
+#'                   method = "randomForest",
+#'                   name = "An example classification test",
+#'                   train_index = sample(150, 100)
+#')
+#'\dontrun{
+#'# Run the test. The result is an object of class "evaluation"
+#'evaluation <- runtest(test) 
+#'summary(results)
+#'}
 summary.evaluation <- function(object, include_test_attributes=TRUE, ...){
   # The output should be a transposed matrix (1 x n)
   out <- t(

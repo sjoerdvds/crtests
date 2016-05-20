@@ -4,6 +4,7 @@
 \alias{make_predictions}
 \alias{make_predictions.boosting}
 \alias{make_predictions.default}
+\alias{make_predictions.gbm}
 \alias{make_predictions.rpart}
 \title{Make predictions using a model
  
@@ -16,6 +17,8 @@ make_predictions(model, data, test, ...)
 \method{make_predictions}{rpart}(model, data, test, ...)
 
 \method{make_predictions}{boosting}(model, data, test, ...)
+
+\method{make_predictions}{gbm}(model, data, test, ...)
 }
 \arguments{
 \item{model}{A classification or regression model}
@@ -38,6 +41,8 @@ Generic function for testing a model by making predictions
 \item \code{rpart}: Calls predict.rpart with appropriate type: "class" for classifcation problems and "vector" for regression problems. Other problem types are not supported, providing a test with another class throws an error.
 
 \item \code{boosting}: Calls predict.boosting on the created model
+
+\item \code{gbm}: Calls predict.gbm on the created model with \code{n.trees} = 100
 }}
 \seealso{
 predict.rpart

@@ -16,4 +16,20 @@
 \description{
 Produces a summary of an evaluation, consisting of the test attributes and the performance measures
 }
+\examples{
+data(iris)
+# A classification test
+test <- createtest(data = iris, 
+                  dependent = "Species",
+                  problem = "classification",
+                  method = "randomForest",
+                  name = "An example classification test",
+                  train_index = sample(150, 100)
+)
+\dontrun{
+# Run the test. The result is an object of class "evaluation"
+evaluation <- runtest(test) 
+summary(results)
+}
+}
 

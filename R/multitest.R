@@ -11,6 +11,37 @@
 # Returns:
 #'@return		A list of class \code{'multitest_results_' + problem}, containing the test results of each iteration
 #'@export
+#'
+#'@examples
+#'\dontrun{
+#' library(crtests)
+#' library(randomForest)
+#' library(rpart)
+#' library(caret)
+#' library(stringr)
+#' 
+#' # A classification multitest
+#' multitest(data = iris,
+#'           dependent = "Species",
+#'           problem = "classification",
+#'           method = "randomForest",
+#'           name = "An example classification multitest",
+#'           iterations = 10,
+#'           cross_validation = TRUE,
+#'           preserve_distribution = TRUE
+#' )
+#' 
+#' # A regression multitest
+#' multitest(data = iris,
+#'           dependent = "Sepal.Width",
+#'           problem = "regression",
+#'           method = "rpart",
+#'           name = "An example regression multitest",
+#'           iterations = 15,
+#'           cross_validation = FALSE,
+#' )
+#' 
+#' }
 multitest <- function(data, dependent, problem=c("classification", "regression"), method, name, description = "", data_transform=identity, iterations=10, holdout=0.2, cross_validation=FALSE, preserve_distribution=FALSE){
   #Split the data into train and test sets. The rows that are in trainIndex will be in the train set, the rows that are not will be in the test set
   data_transform_name = ""

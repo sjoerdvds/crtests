@@ -38,4 +38,35 @@ A list of class \code{'multitest_results_' + problem}, containing the test resul
 \description{
 Wrapper for creating multiple copies of a test and running them. This function supports cross validation and regular sampling. Cross validation splits the data into 'iterations' number of folds, and uses one fold as holdout, using every other fold as training set. This is repeated 'iteration's times, using every fold as holdout exactly once. Non-cross validation takes a random sample of size holdout * nrow(data) and uses it as holdout, the rest is used for training. This is repeated 'iteration's times. Test creation and execution is handled by \code{\link{create_and_run_test}}
 }
+\examples{
+\dontrun{
+library(crtests)
+library(randomForest)
+library(rpart)
+library(caret)
+library(stringr)
+
+# A classification multitest
+multitest(data = iris,
+          dependent = "Species",
+          problem = "classification",
+          method = "randomForest",
+          name = "An example classification multitest",
+          iterations = 10,
+          cross_validation = TRUE,
+          preserve_distribution = TRUE
+)
+
+# A regression multitest
+multitest(data = iris,
+          dependent = "Sepal.Width",
+          problem = "regression",
+          method = "rpart",
+          name = "An example regression multitest",
+          iterations = 15,
+          cross_validation = FALSE,
+)
+
+}
+}
 
