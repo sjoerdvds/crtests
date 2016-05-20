@@ -6,7 +6,7 @@ The aim of `Classification and Regression Tests` is to make the process of runni
 
 This package provides a single API for making predictions based on a regression model or classification model, that makes sure the data is cleaned in such a way that the technique can process it with a minimal amount of problems. The results of a test are presented in a consistent way.
 
-Basically, the aim of `crtests` is to make running a classifier or regression test as simple as providing data, selecting a technique. Several techniques are supported and verified 'out of the box': Random Forests for regression and classification through the [`randomForest` package](https://cran.r-project.org/web/packages/randomForest/index.html); CART for regression and classification through the [`rpart` package](https://cran.r-project.org/web/packages/rpart/index.html); Adaboost for regression through the [`gbm` package](https://cran.r-project.org/web/packages/gbm/index.html) and Adaboost for classification through the `boosting` function from the [`adabag` package](https://cran.r-project.org/web/packages/adabag/index.html); linear regression through [`lm`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html).
+Basically, the aim of `crtests` is to make running a classifier or regression test as simple as providing data, selecting a technique. Several techniques are supported and verified 'out of the box': Random Forests for regression and classification through the [`randomForest` package](https://cran.r-project.org/package=randomForest); CART for regression and classification through the [`rpart` package](https://cran.r-project.org/package=rpart); Adaboost for regression through the [`gbm` package](http://cran.r-project.org/package=gbm) and Adaboost for classification through the `boosting` function from the [`adabag` package](http://cran.r-project.org/package=adabag); linear regression through [`lm`](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html).
 
 `crtests` splits the classifier/regression testing process into multiple steps, each of which can be adapted to other techniques with requirements of their own. See the "extending" vignette to see how `crtests` can be made to work with your favorite technique, if it does not work out of the box.
 
@@ -55,8 +55,8 @@ runtest(test)
 #>                                                 
 #>                  Accuracy : 0.98                
 #>                    95% CI : 0.8935305, 0.9994938
-#>       No information rate : 0.44                
-#>  P-value (accuracy > NIR) : 9.618575e-17        
+#>       No information rate : 0.46                
+#>  P-value (accuracy > NIR) : 8.200386e-16        
 #>    McNemar's test P-value : NaN
 
 # A regression test
@@ -80,11 +80,11 @@ runtest(test)
 #> 
 #> Performance measures & statistics:
 #>                                             
-#>                      Mean error : 0.02801924
-#>             Mean absolute error : 0.2244926 
-#>               Mean square error : 0.08519311
-#>  Mean absolute percentage error : 7.702197  
-#>          Root mean square error : 0.2918786
+#>                      Mean error : -0.1257484
+#>             Mean absolute error : 0.2032545 
+#>               Mean square error : 0.07694968
+#>  Mean absolute percentage error : 6.02664   
+#>          Root mean square error : 0.2773981
 ```
 
 ### Multiple tests with one technique and multiple training samples
@@ -130,18 +130,18 @@ summary(
 #> Performance measures:
 #> 
 #>                                Min.  1st Qu.   Median     Mean  3rd Qu.
-#>                   Accuracy 8.67e-01 9.67e-01 9.67e-01 9.67e-01 1.00e+00
-#>      Lower bound of 95% CI 6.93e-01 8.28e-01 8.28e-01 8.32e-01 8.84e-01
-#>      Upper bound of 95% CI 9.62e-01 9.99e-01 9.99e-01 9.95e-01 1.00e+00
+#>                   Accuracy 9.00e-01 9.00e-01 9.67e-01 9.50e-01 9.92e-01
+#>      Lower bound of 95% CI 7.35e-01 7.35e-01 8.28e-01 8.07e-01 8.70e-01
+#>      Upper bound of 95% CI 9.79e-01 9.79e-01 9.99e-01 9.91e-01 1.00e+00
 #>        No information rate 3.33e-01 3.33e-01 3.33e-01 3.33e-01 3.33e-01
-#>   P-value (accuracy > NIR) 4.86e-15 4.86e-15 2.96e-13 2.31e-10 2.96e-13
+#>   P-value (accuracy > NIR) 4.86e-15 7.77e-14 2.96e-13 6.67e-11 1.66e-10
 #>     McNemar's test P-value       NA       NA       NA      NaN       NA
 #>                                Max.
 #>                   Accuracy 1.00e+00
 #>      Lower bound of 95% CI 8.84e-01
 #>      Upper bound of 95% CI 1.00e+00
 #>        No information rate 3.33e-01
-#>   P-value (accuracy > NIR) 2.30e-09
+#>   P-value (accuracy > NIR) 1.66e-10
 #>     McNemar's test P-value       NA
 
 # A regression multitest
@@ -174,18 +174,18 @@ summary(
 #> 
 #> Performance measures:
 #> 
-#>                                     Min. 1st Qu.  Median      Mean 3rd Qu.
-#>                       Mean error -0.1682 -0.0752 -0.0070 -0.000822   0.051
-#>              Mean absolute error  0.1247  0.2140  0.2320  0.238600   0.256
-#>                Mean square error  0.0316  0.0725  0.0845  0.095990   0.103
-#>   Mean absolute percentage error  4.2410  6.6740  7.9530  8.021000   8.421
-#>           Root mean square error  0.1777  0.2693  0.2907  0.300100   0.321
+#>                                     Min. 1st Qu.   Median    Mean 3rd Qu.
+#>                       Mean error -0.1597 -0.0881 0.000791 0.00278  0.0403
+#>              Mean absolute error  0.1760  0.2044 0.214800 0.23850  0.2638
+#>                Mean square error  0.0458  0.0656 0.084580 0.09507  0.1072
+#>   Mean absolute percentage error  5.6550  6.7110 7.674000 8.01900  9.3140
+#>           Root mean square error  0.2141  0.2560 0.290800 0.30220  0.3273
 #>                                    Max.
-#>                       Mean error  0.168
-#>              Mean absolute error  0.411
-#>                Mean square error  0.227
-#>   Mean absolute percentage error 13.380
-#>           Root mean square error  0.476
+#>                       Mean error  0.188
+#>              Mean absolute error  0.354
+#>                Mean square error  0.223
+#>   Mean absolute percentage error 11.840
+#>           Root mean square error  0.472
 ```
 
 Installing the latest version of crtests
